@@ -219,7 +219,7 @@ uv python pin 3.12
 UV supports defining dependencies directly in Python script comments:
 
 ```python
-#!/usr/bin/env -S uv run python3
+#!/usr/bin/env -S uv run --script
 # /// script
 # dependencies = [
 #   "requests",
