@@ -6,10 +6,12 @@
 
 import argparse
 import os
+import shutil
 import socket
 import subprocess
 import sys
 import atexit
+import time
 
 SOCKET_PATH = "/tmp/show-image.sock"
 
@@ -18,6 +20,46 @@ def cleanup_socket(path):
     """Remove socket file on exit."""
     if os.path.exists(path):
         os.unlink(path)
+
+
+def open_serve(socket_path):
+    """Launch show-image server in a new kitty split pane."""
+    # Check if running inside kitty
+    if "KITTY_WINDOW_ID" not in os.environ:
+        print("Not running in kitty terminal, cannot open split pane", file=sys.stderr)
+        return False
+
+    # Get the path to this script
+    script_path = os.path.realpath(__file__)
+
+    # Find uv executable
+    uv_cmd = shutil.which("uv")
+    if not uv_cmd:
+        print("Error: uv not found in PATH", file=sys.stderr)
+        return False
+
+    # Use kitty remote control to launch a new split pane
+    result = subprocess.run([
+        "kitty", "@",
+        "launch",
+        "--location=vsplit",      # vertical split
+        "--title=show-image-server",
+        "--cwd=current",           # in same environment
+        "--keep-focus",            # keep focus in current pane
+        uv_cmd, "run", "--script", script_path, "--serve", f"--socket-path={socket_path}"
+    ], capture_output=True)
+
+    if result.returncode != 0:
+        print(f"Failed to launch kitty pane: {result.stderr.decode()}", file=sys.stderr)
+        return False
+
+    # Wait briefly for server to start
+    for _ in range(50):  # wait up to 5 seconds
+        if os.path.exists(socket_path):
+            return True
+        time.sleep(0.1)
+
+    return False
 
 
 def serve_mode(socket_path):
@@ -54,7 +96,10 @@ def serve_mode(socket_path):
                     real_path = os.path.realpath(path)
 
                     if os.path.isfile(real_path):
-                        subprocess.run(["kitty", "+kitten", "icat", real_path])
+                        if "KITTY_WINDOW_ID" in os.environ:
+                            subprocess.run(["kitty", "+kitten", "icat", real_path])
+                        else:
+                            subprocess.run(["timg", "-ph", real_path])
                     else:
                         print(f"File not found: {real_path}", file=sys.stderr)
             finally:
@@ -66,10 +111,11 @@ def serve_mode(socket_path):
 
 
 def put_mode(socket_path, image_path):
-    """Send image path to server."""
+    """Send image path to server, starting server if needed."""
     if not os.path.exists(socket_path):
-        # Silently exit if no server running
-        sys.exit(0)
+        if not open_serve(socket_path):
+            # Server failed to start, exit silently
+            sys.exit(0)
 
     real_path = os.path.realpath(image_path)
 
