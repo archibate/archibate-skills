@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "data-validation",
+  "owner": "anthropics",
+  "repo": "knowledge-work-plugins",
+  "path": "data/skills/data-validation",
+  "branch": "main",
+  "sha": "dc52abdf73aa5ba1d32db08c6d55b1a0218d5086",
+  "source": "manual"
+}

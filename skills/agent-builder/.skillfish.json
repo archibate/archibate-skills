@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "agent-builder",
+  "owner": "shareai-lab",
+  "repo": "learn-claude-code",
+  "path": "skills/agent-builder",
+  "branch": "main",
+  "sha": "e1e562fd51fc2fbaab670fb560e7a72045d50d84",
+  "source": "manual"
+}
