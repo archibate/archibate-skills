@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "cpp-smart-pointers",
+  "owner": "thebushidocollective",
+  "repo": "han",
+  "path": "plugins/languages/cpp/cpp-smart-pointers",
+  "branch": "main",
+  "sha": "db2c6d66bdeab9baf61177d33d02d341391c8ba9",
+  "source": "manual"
+}

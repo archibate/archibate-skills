@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "following-conventions",
+  "owner": "tenzir",
+  "repo": "claude-plugins",
+  "path": "plugins/python/skills/following-conventions",
+  "branch": "main",
+  "sha": "a61a054d446d5c76272b787e2eac8c546205bf54",
+  "source": "manual"
+}
