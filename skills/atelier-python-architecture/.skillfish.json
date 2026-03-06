@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "atelier-python-architecture",
+  "owner": "martinffx",
+  "repo": "claude-code-atelier",
+  "path": "plugins/atelier-python/skills/atelier-python-architecture",
+  "branch": "main",
+  "sha": "826c8b55ef7681db9b6fa492e8251eecacfa94a6",
+  "source": "manual"
+}

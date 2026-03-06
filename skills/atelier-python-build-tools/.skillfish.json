@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "atelier-python-build-tools",
+  "owner": "martinffx",
+  "repo": "claude-code-atelier",
+  "path": "plugins/atelier-python/skills/atelier-python-build-tools",
+  "branch": "main",
+  "sha": "745de9b5498bf84fa0714c6282cb4821c33bdd7b",
+  "source": "manual"
+}

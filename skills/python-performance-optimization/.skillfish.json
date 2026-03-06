@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "python-performance-optimization",
+  "owner": "hermeticormus",
+  "repo": "hermetic-academy",
+  "path": "plugins/python-development/skills/python-performance-optimization",
+  "branch": "main",
+  "sha": "793f1e7b3686741a6978d83286828ae099b9ca4f",
+  "source": "manual"
+}

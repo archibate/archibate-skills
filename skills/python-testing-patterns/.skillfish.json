@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "python-testing-patterns",
+  "owner": "lifangda",
+  "repo": "claude-plugins",
+  "path": "cli-tool/skills-library/python-development/python-testing-patterns",
+  "branch": "main",
+  "sha": "03704b0a92cde8e4b4ca71cd66d5084c9424e482",
+  "source": "manual"
+}

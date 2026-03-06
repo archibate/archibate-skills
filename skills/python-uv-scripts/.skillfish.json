@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "python-uv-scripts",
+  "owner": "basher83",
+  "repo": "lunar-claude",
+  "path": "plugins/devops/python-tools/skills/python-uv-scripts",
+  "branch": "main",
+  "sha": "29605136c2989ebf3248cdcb6a0dfecd48559e1a",
+  "source": "manual"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "python-debugger",
+  "owner": "majesticlabs-dev",
+  "repo": "majestic-marketplace",
+  "path": "plugins/majestic-python/skills/python-debugger",
+  "branch": "master",
+  "sha": "fa5ae14e39fc0a71ba5e403e676f0f53a5037b0e",
+  "source": "manual"
+}
