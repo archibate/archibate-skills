@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "cli-development-guidelines",
+  "owner": "outfitter-dev",
+  "repo": "agents",
+  "path": "plugins/cli-dev/skills/cli-development-guidelines",
+  "branch": "main",
+  "sha": "d7c5001f2eefdc5991655a649d987090daf0e5c1",
+  "source": "manual"
+}

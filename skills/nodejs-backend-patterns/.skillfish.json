@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "nodejs-backend-patterns",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/javascript-typescript/skills/nodejs-backend-patterns",
+  "branch": "main",
+  "sha": "65e3fa00adeb0d4a4e22b77e529870d504d22433",
+  "source": "manual"
+}
