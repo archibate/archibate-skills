@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "data-storytelling",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/business-analytics/skills/data-storytelling",
+  "branch": "main",
+  "sha": "c13da12736efd9a93fcf6d59cdda471cb7de79d8",
+  "source": "manual"
+}

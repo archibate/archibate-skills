@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "prompt-engineering-patterns",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/llm-application-dev/skills/prompt-engineering-patterns",
+  "branch": "main",
+  "sha": "2c28aa58251d2b2b0e3aae067ce69e117ad10710",
+  "source": "manual"
+}
