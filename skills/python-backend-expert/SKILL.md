@@ -1,15 +1,6 @@
 ---
-name: python-expert
-description: "Python backend expert. PROACTIVELY use when working with Django, FastAPI, Flask, Python APIs. Triggers: python, django, fastapi, flask, async python"
-autoInvoke: true
-priority: high
-triggers:
-  - "python"
-  - "django"
-  - "fastapi"
-  - "flask"
-  - "pydantic"
-  - "sqlalchemy"
+name: python-backend-expert
+description: Python backend expert for Django, FastAPI, Flask, and async Python APIs. Use when building web APIs, working with ORMs (SQLAlchemy, Django ORM), implementing async patterns, or using Pydantic for validation. Triggers: fastapi, django, flask, sqlalchemy, pydantic, async def, APIRouter, Base = declarative_base
 allowed-tools: Read, Grep, Glob, Edit, Write
 ---
 

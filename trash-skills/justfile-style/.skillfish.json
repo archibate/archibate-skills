@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "justfile-style",
+  "owner": "motlin",
+  "repo": "claude-code-plugins",
+  "path": "plugins/justfile/skills/justfile-style",
+  "branch": "main",
+  "sha": "b238681a4f13dc49018e01b842785d0513b2d2df",
+  "source": "manual"
+}
