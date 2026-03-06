@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "backtesting-frameworks",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/quantitative-trading/skills/backtesting-frameworks",
+  "branch": "main",
+  "sha": "9f4f715b956a50d7c0e94b72ba246f649ae20de4",
+  "source": "manual"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "statistical-analysis",
+  "owner": "anthropics",
+  "repo": "knowledge-work-plugins",
+  "path": "data/skills/statistical-analysis",
+  "branch": "main",
+  "sha": "908189e78b57321ba14a7c6098867b910772cfa1",
+  "source": "manual"
+}

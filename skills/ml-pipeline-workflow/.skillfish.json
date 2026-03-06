@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "ml-pipeline-workflow",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/machine-learning-ops/skills/ml-pipeline-workflow",
+  "branch": "main",
+  "sha": "c1eed78a8d981e24354b5d4b4ea138874def758f",
+  "source": "manual"
+}

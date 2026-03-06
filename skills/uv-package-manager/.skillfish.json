@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "uv-package-manager",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/python-development/skills/uv-package-manager",
+  "branch": "main",
+  "sha": "916b782e8fa418c8a7ea5b39d7371ba9de5b8009",
+  "source": "manual"
+}

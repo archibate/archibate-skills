@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "risk-metrics-calculation",
+  "owner": "wshobson",
+  "repo": "agents",
+  "path": "plugins/quantitative-trading/skills/risk-metrics-calculation",
+  "branch": "main",
+  "sha": "a83d1f6676c660d7a7bcb6ee277ecb0df29a789b",
+  "source": "manual"
+}

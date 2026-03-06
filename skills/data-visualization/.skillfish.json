@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "data-visualization",
+  "owner": "anthropics",
+  "repo": "knowledge-work-plugins",
+  "path": "data/skills/data-visualization",
+  "branch": "main",
+  "sha": "ed68b749199c751aadc49bd2f7c72d570c9ab7d3",
+  "source": "manual"
+}
