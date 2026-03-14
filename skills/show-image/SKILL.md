@@ -1,6 +1,6 @@
 ---
-name: kitty-image-protocol
-description: Display images in Kitty terminal using the Kitty image protocol. Use when user asks to show/view images in terminal, display plot results, or view image files over SSH connections. Works even without X display.
+name: show-image
+description: Show images in terminal using the Kitty image protocol. Use when user asks to show/view images in terminal, display plot results, or view image files over SSH connections. Works even without X display.
 ---
 
 # Showing Image in Kitty Terminal
