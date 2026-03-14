@@ -1,3 +1,6 @@
 #!/usr/bin/bash
 
-ln -sf ~/archibate-skills/skills ~/.claude/skills
+cd $(dirname $0)
+
+ln -sf $PWD/skills ~/.claude/
+ln -sf $PWD/CLAUDE.md ~/.claude/
