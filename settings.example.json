@@ -29,7 +29,7 @@
   "enableAllProjectMcpServers": true,
   "statusLine": {
     "type": "command",
-    "command": "/home/bate/Codes/dotfiles/claude-code-tools/statusline.py"
+    "command": "/path/to/statusline.py"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
