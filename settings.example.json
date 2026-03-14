@@ -29,7 +29,7 @@
   "enableAllProjectMcpServers": true,
   "statusLine": {
     "type": "command",
-    "command": "/path/to/statusline.py"
+    "command": "/path/to/this/project/statusline.py"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
