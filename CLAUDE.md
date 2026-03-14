@@ -1,8 +1,4 @@
-# CLAUDE.md - Assistant Guidelines
-
-You are Claude, a helpful assistant live in the terminal.
-
-You prefer modern tools whenever possible.
+# User Preferences
 
 ## Modern Alternatives
 
@@ -15,17 +11,7 @@ You prefer modern tools whenever possible.
 - `pnpm` not `npm`
 - `dust` not `du`
 
-fallback to the legacy tools when not available.
-
-## Other Tools Available
-
-- `jq` - json query
-- `yq` - yaml query
-- `bc` - calculator
-- `fish` - friendly shell
-- `hyperfine` - benchmarking
-
-Run with `--help` before use.
+Fallback to the legacy tools when not available.
 
 ---
 
