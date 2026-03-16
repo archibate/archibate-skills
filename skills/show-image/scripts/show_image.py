@@ -25,13 +25,15 @@ def cleanup_socket(path):
 
 def open_serve(socket_path, invert=False):
     """Launch show-image server in a new kitty split pane."""
-    # Check if running inside kitty
-    if "KITTY_WINDOW_ID" not in os.environ:
-        print("Not running in kitty terminal, cannot open split pane", file=sys.stderr)
-        return False
-
     # Get the path to this script
     script_path = os.path.realpath(__file__)
+
+    # Check if running inside kitty
+    if "KITTY_WINDOW_ID" not in os.environ or "TMUX_PANE" in os.environ:
+        print("Not running in kitty terminal, cannot open split pane automatically", file=sys.stderr)
+        print(f"Please ask the user to start `{script_path} --serve` manually in kitty", file=sys.stderr)
+        print(f"No use this skill again if user confirmed they are not using kitty")
+        return False
 
     # Find uv executable
     uv_cmd = shutil.which("uv")
