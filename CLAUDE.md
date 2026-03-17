@@ -19,4 +19,4 @@ Fallback to the legacy tools when not available.
 
 - Indentation: 4 spaces
 - Package Manager: `uv`
-- Formatting & Linting: `ruff` and `pyright`
+- Formatting & Linting: `ruff` and `basedpyright`
