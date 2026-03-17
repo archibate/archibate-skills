@@ -2,5 +2,14 @@
 
 cd $(dirname $0)
 
-ln -sf $PWD/skills ~/.claude/
-ln -sf $PWD/CLAUDE.md ~/.claude/
+if test -d ~/.claude/; then
+    echo -- Installing for Claude Code
+    ln -sf $PWD/skills ~/.claude/
+    ln -sf $PWD/CLAUDE.md ~/.claude/
+fi
+
+if test -d ~/.codex/; then
+    echo -- Installing for Codex
+    ln -sf $PWD/skills ~/.codex/
+    ln -sf $PWD/CLAUDE.md ~/.codex/AGENTS.md
+fi
