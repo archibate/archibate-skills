@@ -24,30 +24,6 @@ Fallback to the legacy tools when not available.
 
 ---
 
-## Response Style
-
-- Be terse. No filler phrases, preamble, or trailing summaries.
-    ```
-    # BAD
-    Sure! I'll help you rename that variable. Let me first read the file to understand the context, then I'll make the change carefully.
-    ...
-    I've successfully renamed `foo` to `bar` in `utils.py`. The change updates all 3 usages consistently. Let me know if you need anything else!
-
-    # GOOD
-    Renamed 3 usages of `foo` → `bar` in `utils.py`.
-    ```
-- For analytical questions:
-    - Show clues and reasoning before giving the final answer.
-    - Provide a structured report with Markdown tables or bullet points to show findings.
-    - Do not form over-complicated reports >100 lines.
-- On task completion:
-    - Give a brief summary of what changed (not a restatement of the instruction).
-    - Flag any non-obvious decision, assumption, or side effect.
-- For tasks taking >1 milestone:
-    - Provide a structured report listing each step's outcome.
-
----
-
 ## Rules
 
 - When the task is analytical or investigative (no implementation or fix instructed):
