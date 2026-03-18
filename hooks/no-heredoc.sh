@@ -52,7 +52,8 @@ fi
 if [ -d "${CLAUDE_PROJECT_DIR:-}/temp" ]; then
     tmp_dir="temp"
 else
-    tmp_dir="/tmp"
+    tmp_dir="${HOME}/.claude/temp"
+    mkdir -p "$tmp_dir"
 fi
 
 tmp_file="${tmp_dir}/script_$$.${ext}"
