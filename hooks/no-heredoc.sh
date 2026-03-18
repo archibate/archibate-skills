@@ -14,6 +14,11 @@ if echo "$command" | grep -qE '\bgit\s+commit\b'; then
     exit 0
 fi
 
+# Explicit bypass: agent uses EOF_BYPASS_HEREDOC_RESTRICTION as the heredoc marker
+if echo "$command" | grep -qF 'EOF_BYPASS_HEREDOC_RESTRICTION'; then
+    exit 0
+fi
+
 # Detect interpreter — order matters: uv run before python
 if echo "$command" | grep -qE '\buv\s+run\b'; then
     interpreter="uv run"
@@ -50,7 +55,7 @@ case "$interpreter" in
         ;;
 esac
 
-printf 'Heredoc detected for %s. Use Write tool + temp file instead:\n  %s\n' \
+printf 'Heredoc detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use heredoc, replace EOF with EOF_BYPASS_HEREDOC_RESTRICTION.\n' \
     "$interpreter" "$example" >&2
 
 exit 2
