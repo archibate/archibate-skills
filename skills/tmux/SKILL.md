@@ -1,6 +1,6 @@
 ---
 name: tmux
-description: Use when running tasks >5 minutes, tasks that must persist after conversation ends, or interacting with TUI applications and running processes that Bash tool cannot handle
+description: Use when interacting with TUI applications, or running processes that require stdin interaction. For non-interactive long-running tasks, prefer pueue instead.
 ---
 
 # Tmux
@@ -13,12 +13,12 @@ Claude controls tmux via CLI commands. Use for tasks that persist, run in backgr
 
 Use tmux if ANY condition is met:
 
-1. Task takes >5 minutes
-2. Task must persist after conversation ends
-3. Need to interact with running process (TUI apps, prompts, stdin)
-4. User requests to split pane (when inside tmux)
+1. Need to interact with running process (TUI apps, prompts, stdin)
+2. User requests to split pane (when inside tmux)
+3. Task must persist AND user needs to attach interactively
 
-Otherwise: Use Bash tool (or `run_in_background` for simple background tasks)
+For non-interactive long-running tasks: prefer `pueue` (better status tracking, JSON output, dependencies)
+For simple background tasks: use Bash tool's `run_in_background` parameter
 
 ## Safety Constraints (CRITICAL)
 
