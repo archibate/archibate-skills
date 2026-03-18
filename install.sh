@@ -22,12 +22,22 @@ if test -d ~/.claude; then
     settings=~/.claude/settings.json
     if test -f "$settings"; then
         # Remove any existing no-heredoc entry, then append fresh
+        # Note: settings.json uses hooks wrapper format (hooks under "hooks" key)
         jq --arg cmd "$hook_script" '
             .hooks.PreToolUse //= [] |
             .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
             [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
         ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
         echo "[claude] Registered no-heredoc hook (PreToolUse/Bash) in $settings"
+
+        # Register question-readonly-hint hook into settings.json
+        hook_script="bash $PWD/hooks/question-readonly-hint.sh"
+        jq --arg cmd "$hook_script" '
+            .hooks.UserPromptSubmit //= [] |
+            .hooks.UserPromptSubmit = (.hooks.UserPromptSubmit | map(select(.hooks[0].command != $cmd))) +
+            [{"matcher": "*", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
+        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
+        echo "[claude] Registered question-readonly-hint hook (UserPromptSubmit) in $settings"
     else
         echo "[claude] Skipping hook registration: $settings not found"
     fi
