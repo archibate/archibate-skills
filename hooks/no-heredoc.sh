@@ -52,7 +52,7 @@ fi
 if [ -d "${CLAUDE_PROJECT_DIR:-}/temp" ]; then
     tmp_dir="temp"
 else
-    tmp_dir="${HOME}/.claude/temp"
+    tmp_dir="${CLAUDE_PROJECT_DIR:-$HOME}/.claude/temp"
     mkdir -p "$tmp_dir"
 fi
 
