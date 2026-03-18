@@ -8,6 +8,7 @@
 - `sd` not `sed`
 - `just` not `make`
 - `uv` not `pip`
+- `uv run` not `python3`
 - `pnpm` not `npm`
 - `dust` not `du`
 
