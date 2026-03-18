@@ -28,11 +28,9 @@ Fallback to the legacy tools when not available.
 - Be terse. No filler phrases, preamble, or trailing summaries.
     ```
     # BAD
-    Sure! I'll help you rename that variable. Let me first read the file to understand
-    the context, then I'll make the change carefully.
+    Sure! I'll help you rename that variable. Let me first read the file to understand the context, then I'll make the change carefully.
     ...
-    I've successfully renamed `foo` to `bar` in `utils.py`. The change updates all 3
-    usages consistently. Let me know if you need anything else!
+    I've successfully renamed `foo` to `bar` in `utils.py`. The change updates all 3 usages consistently. Let me know if you need anything else!
 
     # GOOD
     Renamed 3 usages of `foo` → `bar` in `utils.py`.
