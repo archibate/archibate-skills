@@ -15,8 +15,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.anthropic.com)",
       "WebFetch(domain:docs.z.ai)",
-      "Write(/tmp/**)",
-      "Edit(/tmp/**)"
+      "Write(//tmp/**)",
+      "Edit(//tmp/**)"
     ],
     "ask": [
       "Bash(sudo *)",
