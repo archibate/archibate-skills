@@ -50,10 +50,9 @@ fi
 
 # Determine temp dir
 if [ -d "${CLAUDE_PROJECT_DIR:-}/temp" ]; then
-    tmp_dir="temp"
+    tmp_dir="${CLAUDE_PROJECT_DIR}/temp"
 else
-    tmp_dir="${CLAUDE_PROJECT_DIR:-$HOME}/.claude/temp"
-    mkdir -p "$tmp_dir"
+    tmp_dir="/tmp"
 fi
 
 tmp_file="${tmp_dir}/script_$$.${ext}"

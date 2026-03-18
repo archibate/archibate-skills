@@ -58,7 +58,7 @@ Fallback to the legacy tools when not available.
     - Run independent tasks in parallel subagents; run dependent tasks sequentially
     - Create a commit on every milestone achieved
 
-- When a tool call may return large or noisy output (e.g. Context7, broad codebase search):
+- When a tool call may return large or noisy output (e.g. Context7, WebSearch, broad codebase search):
     - Delegate to a subagent to protect the main context window
 
 ---
