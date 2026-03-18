@@ -19,6 +19,20 @@ if echo "$command" | grep -qF 'EOF_BYPASS_HEREDOC_RESTRICTION'; then
     exit 0
 fi
 
+# Count lines inside the heredoc; allow if <= 10
+marker=$(printf '%s' "$command" | grep -oE "<<[-'\" ]*[A-Za-z_][A-Za-z0-9_]*" | head -1 | grep -oE '[A-Za-z_][A-Za-z0-9_]*$')
+if [ -n "$marker" ]; then
+    heredoc_lines=$(printf '%s' "$command" | awk -v m="$marker" '
+        found && $0 == m { found=0; next }
+        found { count++ }
+        !found && index($0, "<<") && index($0, m) { found=1 }
+        END { print count+0 }
+    ')
+    if [ "$heredoc_lines" -le 10 ]; then
+        exit 0
+    fi
+fi
+
 # Detect interpreter — order matters: uv run before python
 if echo "$command" | grep -qE '\buv\s+run\b'; then
     interpreter="uv run"
