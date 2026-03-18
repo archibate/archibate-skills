@@ -9,6 +9,11 @@ if ! echo "$command" | grep -qE '<<[^<]'; then
     exit 0
 fi
 
+# Bypass for git commit (heredoc used for commit message)
+if echo "$command" | grep -qE '\bgit\s+commit\b'; then
+    exit 0
+fi
+
 # Detect interpreter — order matters: uv run before python
 if echo "$command" | grep -qE '\buv\s+run\b'; then
     interpreter="uv run"
