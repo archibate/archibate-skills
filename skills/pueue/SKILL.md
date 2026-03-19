@@ -11,7 +11,6 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
 
 ## When to Use
 
-- Running tasks in background (replace Bash with `run_in_background=True`)
 - Non-interactive long-running tasks expected to run for >2 minutes
 - Computation intensive tasks with parallel job scheduling (prevent resource exhaustion)
 
@@ -24,8 +23,7 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
 
 - `pueue status` to check if daemon is started, start with `pueued -d`
 - Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
-    - `-p 4` means allow up to 4 jobs to run concurrently in this group
-    - This is to prevent system resource exhaustion in CPU, memory, I/O
+    - `-p 4` means allow up to 4 jobs to run concurrently in this group: prevent system resource exhaustion in CPU, memory, I/O
 - Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
     - Important: Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
 - Check the log and status:
@@ -35,12 +33,12 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
     ```
     - `-l 15` means to retrive the last 15 lines of log to protect the main context
     - Add a short delay before checking if the task just started: `sleep 10`
-    - Sleep delay follow this sequence: 10, 40, 160, 320, 600
-    - When 600 (10 minutes) is reached:
-        - Load `long-waits` skill
-        - Follow what the `long-waits` skill told you
-        - Check task status until complete
-        - Use `urgent-notify` skill to notify your human partner on emergence
+    - If task still in progress:
+        - Start `pueue follow [task id]` in background (`run_in_background: true`)
+        - When task completes, you receive `<task-notification>`
+        - Use CronCreate to create a routine check every 10 minutes
+        - Read task log and report progress
+        - Fix if task error or stuck
 
 ---
 

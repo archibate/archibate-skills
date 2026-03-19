@@ -1,6 +1,6 @@
 ---
 name: urgent-notify
-description: TRIGGER when urgent event happened during long waiting or routine checks. TRIGGER when user says "notify me on X", "call me on emergence", "notify me when complete", "AFK".
+description: TRIGGER when urgent event happened during long waiting or routine checks. TRIGGER when user says "notify me on X", "AFK".
 ---
 
 # Urgent Notify
@@ -82,11 +82,6 @@ curl -s -d "<message>" "https://ntfy.sh/$NTFY_SH_PRIVATE_TOPIC"
 ```
 
 **⚠️ Privacy Warning:** ntfy.sh topics are public. Anyone who knows your topic name can subscribe. Never include sensitive content like API keys, passwords, or confidential data in notifications.
-
-## Related Skills
-
-- **pueue**: Background task management — use urgent-notify when pueue task fails unexpectedly
-- **long-waits**: Extended waiting periods — use urgent-notify when condition is met or progress report is due
 
 ## Example Scenarios
 
