@@ -63,5 +63,3 @@ Prefer `--json`/`jq` when output is parsed programmatically. For simple checks, 
 - Before using any field name, API parameter, or identifier from an external system (hook input schemas, CLI flags, APIs, etc.):
     - Verify it exists by checking docs (Context7/WebFetch) or searching the codebase (Grep/Read)
     - Do NOT invent or guess names — if you cannot verify, state that explicitly
-
-@RTK.md
