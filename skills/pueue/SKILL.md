@@ -22,15 +22,19 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
 
 ## Workflow
 
-- `pueue status` to check if `pueue` daemon is started, start with `pueued -d`
+- `pueue status` to check if daemon is started, start with `pueued -d`
 - Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
     - `-p 4` means allow up to 4 jobs to run concurrently in this group
     - This is to prevent system resource exhaustion in CPU, memory, I/O
 - Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
     - Important: Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
-- Routinely query the log and status using `sleep 20 && pueue status -g [project-name] && pueue log -l 15 [task id]`
-    - Sleep delay expands exponentionally starting from 20, max to 600
-    - `-l 15` retrives the last 15 lines of log to protect the main context
+- Routinely query the log and status using `sleep 10 && pueue status -g [project-name] && pueue log -l 15 [task id]`
+    - `-l 15` means to retrive the last 15 lines of log to protect the main context
+    - Sleep delay follow this sequence: 10, 40, 160, 320, 600
+    - When 600 (10 minutes) is reached:
+        - Load `long-waits` skill
+        - Follow what the `long-waits` skill told you
+        - Check task status until complete
 
 ---
 
