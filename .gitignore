@@ -3,3 +3,4 @@ settings.json
 router.json
 .claude/temp
 .claude/worktrees
+.claude/scheduled_tasks.lock

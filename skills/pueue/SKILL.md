@@ -28,13 +28,19 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
     - This is to prevent system resource exhaustion in CPU, memory, I/O
 - Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
     - Important: Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
-- Routinely query the log and status using `sleep 10 && pueue status -g [project-name] && pueue log -l 15 [task id]`
+- Check the log and status:
+    ```bash
+    pueue status -g [project-name]
+    pueue log -l 15 [task id]
+    ```
     - `-l 15` means to retrive the last 15 lines of log to protect the main context
+    - Add a short delay before checking if the task just started: `sleep 10`
     - Sleep delay follow this sequence: 10, 40, 160, 320, 600
     - When 600 (10 minutes) is reached:
         - Load `long-waits` skill
         - Follow what the `long-waits` skill told you
         - Check task status until complete
+        - Use `urgent-notify` skill to notify your human partner on emergence
 
 ---
 
@@ -183,4 +189,4 @@ pueue status --json | jq ".tasks.\"$id\".result"
 - `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
 - Task IDs are integers; quote them in `jq` with `.tasks.\"$id\"`
 - `pueue clean` only removes finished tasks — running tasks are unaffected
-- Not using `-g` with project name fallback to the `default` group
+- Not using `-g` with project name falls back to the `default` group
