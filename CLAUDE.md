@@ -18,35 +18,15 @@ Fallback to the legacy tools when not available.
 
 ## Agent CLI Tools
 
-When output will be parsed or filtered programmatically, prefer structured output (`--json`, `jc`, `jq`). For simple existence checks or one-shot lookups, use direct tools (`pgrep`, `which`, etc.) — don't over-structure. Fallback to legacy tools when not available.
+Prefer `--json`/`jc`/`jq` when output is parsed programmatically. For simple checks, use direct tools. Fallback to legacy tools when not available.
 
-**Search & Code Transforms**
-- `rg` — fast content search; supports `--json` when output is parsed programmatically
-- `fd` — fast file search by name/path; use instead of `find` for file discovery
-- `ast-grep` (`sg`) — AST-aware code search and rewrite; prefer over regex for code edits
-- `comby` — structural code search/replace, language-agnostic; use when `ast-grep` lacks language support
-
-**Data Processing**
-- `jq` — parse/transform JSON; use for API responses and config files
-- `yq` — same as `jq` but for YAML/TOML/XML
-- `jc <cmd>` — wraps legacy tools (e.g. `jc ps aux`, `jc df`) to get JSON output
-- `duckdb` — analytical queries on CSV/Parquet/JSON with SQL; prefer for joins, aggregations, columnar ops
-- `mlr` (miller) — row-oriented streaming transforms on CSV/TSV/JSON; prefer for pipeline filters and reshaping
-
-**HTTP & APIs**
-- `xh` — send HTTP requests; use for non-GitHub APIs; supports `--json` for structured output
-- `gh` — GitHub operations (issues, PRs, runs); supports `--json <fields>` for structured output
-
-**Task & Process Management**
-- `pueue` — queue and manage background shell tasks; prefer over tmux for non-interactive long-running commands
-
-**Files & Documents**
-- `bat` — paged file viewer with syntax highlighting; use instead of `cat` for human-readable output
-- `pdftotext` — extract text from PDFs for reading/processing
-- `sqlite3` — persistent local SQL store for multi-step workflows
-
-**Benchmarking**
-- `hyperfine` — benchmark shell commands; use `--export-json` to capture results programmatically
+- `ast-grep` (`sg`) — prefer over regex for code search/rewrite
+- `comby` — structural search/replace when `ast-grep` lacks language support
+- `duckdb` — prefer over pandas for joins/aggregations on CSV/Parquet/JSON
+- `mlr` — streaming row transforms on CSV/TSV/JSON pipelines
+- `jc <cmd>` — wraps legacy tools to produce JSON (e.g. `jc ps aux`)
+- `pueue` — prefer over tmux for non-interactive long-running commands
+- `pdftotext`, `sqlite3`, `hyperfine`
 
 ---
 
