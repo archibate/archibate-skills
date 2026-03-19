@@ -38,6 +38,15 @@ if test -d ~/.claude; then
             [{"matcher": "*", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
         ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
         echo "[claude] Registered question-readonly-hint hook (UserPromptSubmit) in $settings"
+
+        # Register link-venv hook into settings.json
+        hook_script="bash $PWD/hooks/link-venv.sh"
+        jq --arg cmd "$hook_script" '
+            .hooks.SessionStart //= [] |
+            .hooks.SessionStart = (.hooks.SessionStart | map(select(.hooks[0].command != $cmd))) +
+            [{"matcher": "*", "hooks": [{"type": "command", "command": $cmd, "timeout": 10}]}]
+        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
+        echo "[claude] Registered link-venv hook (SessionStart) in $settings"
     else
         echo "[claude] Skipping hook registration: $settings not found"
     fi
