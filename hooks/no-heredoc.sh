@@ -4,8 +4,48 @@ set -euo pipefail
 input=$(cat)
 command=$(echo "$input" | jq -r '.tool_input.command // ""')
 
-# Only trigger if heredoc is present (<<, not <<<)
-if ! echo "$command" | grep -qE '<<[^<]'; then
+# Detect heredoc (<<, not <<<)
+has_heredoc=false
+if echo "$command" | grep -qE '<<[^<]'; then
+    has_heredoc=true
+fi
+
+# Detect inline -c script (multi-line string after -c flag)
+# Patterns: python3 -c "...", bash -c '...', uv run python -c "..."
+has_inline_c=false
+inline_c_lines=0
+if echo "$command" | grep -qE -- '-c\s+["'"'"']'; then
+    # Extract content after -c and count lines
+    # Use awk to find -c followed by quote and extract until matching quote
+    inline_c_lines=$(printf '%s' "$command" | awk '
+        BEGIN { in_c = 0; quote = ""; content = "" }
+        /-c/ && !in_c {
+            # Find the quote character after -c
+            match($0, /-c[[:space:]]+(["'"'"'])/, arr)
+            if (RSTART > 0) {
+                quote = arr[1]
+                in_c = 1
+                # Get content starting from after the quote
+                rest = substr($0, RSTART + RLENGTH)
+                content = rest
+            }
+        }
+        in_c && NR > 1 {
+            content = content "\n" $0
+        }
+        END {
+            # Count newlines in content
+            gsub(/[^\n]/, "", content)
+            print length(content) + 1
+        }
+    ')
+    if [ "$inline_c_lines" -gt 20 ]; then
+        has_inline_c=true
+    fi
+fi
+
+# Exit if neither heredoc nor inline -c detected
+if ! $has_heredoc && ! $has_inline_c; then
     exit 0
 fi
 
@@ -14,23 +54,32 @@ if echo "$command" | grep -qE '\bgit\s+commit\b'; then
     exit 0
 fi
 
-# Explicit bypass: agent uses EOF_BYPASS_HEREDOC_RESTRICTION as the heredoc marker
+# Explicit bypass marker
 if echo "$command" | grep -qF 'EOF_BYPASS_HEREDOC_RESTRICTION'; then
     exit 0
 fi
 
-# Count lines inside the heredoc; allow if <= 20
-marker=$(printf '%s' "$command" | grep -oE "<<[-'\" ]*[A-Za-z_][A-Za-z0-9_]*" | head -1 | grep -oE '[A-Za-z_][A-Za-z0-9_]*$')
-if [ -n "$marker" ]; then
-    heredoc_lines=$(printf '%s' "$command" | awk -v m="$marker" '
-        found && $0 == m { found=0; next }
-        found { count++ }
-        !found && index($0, "<<") && index($0, m) { found=1 }
-        END { print count+0 }
-    ')
-    if [ "$heredoc_lines" -le 20 ]; then
-        exit 0
+# Count lines inside heredoc; allow if <= 20
+script_lines=0
+detection_type=""
+if $has_heredoc; then
+    marker=$(printf '%s' "$command" | grep -oE "<<[-'\" ]*[A-Za-z_][A-Za-z0-9_]*" | head -1 | grep -oE '[A-Za-z_][A-Za-z0-9_]*$')
+    if [ -n "$marker" ]; then
+        script_lines=$(printf '%s' "$command" | awk -v m="$marker" '
+            found && $0 == m { found=0; next }
+            found { count++ }
+            !found && index($0, "<<") && index($0, m) { found=1 }
+            END { print count+0 }
+        ')
+        detection_type="Heredoc"
     fi
+elif $has_inline_c; then
+    script_lines=$inline_c_lines
+    detection_type="Inline -c script"
+fi
+
+if [ "$script_lines" -le 20 ]; then
+    exit 0
 fi
 
 # Detect interpreter — order matters: uv run before python
@@ -44,7 +93,7 @@ elif echo "$command" | grep -qE '\b(bash|sh)\b'; then
     interpreter="bash"
     ext="sh"
 else
-    # No relevant interpreter (e.g. git commit -m "$(cat <<EOF...)") — allow
+    # No relevant interpreter — allow
     exit 0
 fi
 
@@ -69,7 +118,7 @@ case "$interpreter" in
         ;;
 esac
 
-printf 'Heredoc >20 lines detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use heredoc, replace EOF with EOF_BYPASS_HEREDOC_RESTRICTION.\n' \
-    "$interpreter" "$example" >&2
+printf '%s >20 lines detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use inline script, add BYPASS_INLINE_SCRIPT_RESTRICTION to the command.\n' \
+    "$detection_type" "$interpreter" "$example" >&2
 
 exit 2

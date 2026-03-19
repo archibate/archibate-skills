@@ -90,45 +90,45 @@ def serve_mode(socket_path, invert=False):
         while True:
             conn, _ = sock.accept()
             try:
-                # Read until newline
+                # Read all paths from this connection until client closes it
                 data = b""
                 while True:
                     chunk = conn.recv(1)
                     if not chunk:
                         break
                     if chunk == b"\n":
-                        break
-                    data += chunk
+                        if data:
+                            path = data.decode("utf-8")
+                            real_path = os.path.realpath(path)
 
-                if data:
-                    path = data.decode("utf-8")
-                    real_path = os.path.realpath(path)
+                            if os.path.isfile(real_path):
+                                print(real_path)
+                                display_path = real_path
+                                if invert:
+                                    # Create temp file for inverted image
+                                    suffix = os.path.splitext(real_path)[1]
+                                    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+                                        tmp_path = tmp.name
+                                    subprocess.run(
+                                        ["convert", real_path, "-negate", tmp_path],
+                                        check=True,
+                                        capture_output=True
+                                    )
+                                    display_path = tmp_path
 
-                    if os.path.isfile(real_path):
-                        print(real_path)
-                        display_path = real_path
-                        if invert:
-                            # Create temp file for inverted image
-                            suffix = os.path.splitext(real_path)[1]
-                            with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
-                                tmp_path = tmp.name
-                            subprocess.run(
-                                ["convert", real_path, "-negate", tmp_path],
-                                check=True,
-                                capture_output=True
-                            )
-                            display_path = tmp_path
-
-                        try:
-                            if "KITTY_WINDOW_ID" in os.environ:
-                                subprocess.run(["kitty", "+kitten", "icat", display_path])
+                                try:
+                                    if "KITTY_WINDOW_ID" in os.environ:
+                                        subprocess.run(["kitty", "+kitten", "icat", display_path])
+                                    else:
+                                        subprocess.run(["timg", "-ph", display_path])
+                                finally:
+                                    if invert and display_path != real_path:
+                                        os.unlink(display_path)
                             else:
-                                subprocess.run(["timg", "-ph", display_path])
-                        finally:
-                            if invert and display_path != real_path:
-                                os.unlink(display_path)
+                                print(f"File not found: {real_path}", file=sys.stderr)
+                        data = b""
                     else:
-                        print(f"File not found: {real_path}", file=sys.stderr)
+                        data += chunk
             finally:
                 conn.close()
     except KeyboardInterrupt:

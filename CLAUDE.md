@@ -18,7 +18,7 @@ Fallback to the legacy tools when not available.
 
 ## Agent CLI Tools
 
-Prefer `--json`/`jc`/`jq` when output is parsed programmatically. For simple checks, use direct tools. Fallback to legacy tools when not available.
+Prefer `--json`/`jq` when output is parsed programmatically. For simple checks, use direct tools. Fallback to legacy tools when not available.
 
 - `ast-grep` (`sg`) — prefer over regex for code search/rewrite
 - `comby` — structural search/replace when `ast-grep` lacks language support
@@ -39,6 +39,10 @@ Prefer `--json`/`jc`/`jq` when output is parsed programmatically. For simple che
 ---
 
 ## Rules
+
+- When starting long-running Python tasks run for >2 minutes (e.g. data pipeline, training):
+    - Load the `pueue` skill
+    - Start as background tasks using `pueue`
 
 - When the task is analytical or investigative (no implementation or fix instructed):
     - Read-only: do not edit files or change system state

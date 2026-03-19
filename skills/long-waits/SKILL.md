@@ -1,6 +1,6 @@
 ---
 name: long-waits
-description: Use when wait longer than 10 minutes before performing an action, implement delayed execution, schedule tasks for a specific time, or do something after a condition becomes true
+description: TRIGGER when wait longer than 10 minutes, schedule tasks for delayed execution, set up a routine check, wait for background task to complete, or do something after a condition becomes true. TRIGGER when user says "run this X minutes later", "run this every X minutes", "do X after Y complete", "wait for X then Y".
 ---
 
 # Long Waits

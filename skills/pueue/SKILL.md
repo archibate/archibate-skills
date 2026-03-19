@@ -1,6 +1,6 @@
 ---
 name: pueue
-description: Use when running non-interactive long-running background tasks, queuing multiple commands with dependencies, or needing structured task status tracking.
+description: Starting background tasks using pueue. TRIGGER when running non-interactive long-running tasks run for >2 minutes, or any computation intensive tasks.
 ---
 
 # Pueue
@@ -8,6 +8,31 @@ description: Use when running non-interactive long-running background tasks, que
 ## Overview
 
 Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persistently; `pueue` is the client CLI.
+
+## When to Use
+
+- Running tasks in background (replace Bash with `run_in_background=True`)
+- Non-interactive long-running tasks expected to run for >2 minutes
+- Computation intensive tasks with parallel job scheduling (prevent resource exhaustion)
+
+## When NOT to Use
+
+- Short tasks (<2 minutes): run in Bash directly
+- Interactive commands: `tmux` instead for TUI access
+
+## Workflow
+
+- `pueue status` to check if `pueue` daemon is started, start with `pueued -d`
+- Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
+    - `-p 4` means allow up to 4 jobs to run concurrently in this group
+    - This is to prevent system resource exhaustion in CPU, memory, I/O
+- Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
+    - Important: Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
+- Routinely query the log and status using `sleep 20 && pueue status -g [project-name] && pueue log -l 15 [task id]`
+    - Sleep delay expands exponentionally starting from 20, max to 600
+    - `-l 15` retrives the last 15 lines of log to protect the main context
+
+---
 
 ## Daemon Setup
 
@@ -22,7 +47,7 @@ pueue status
 pueue shutdown
 ```
 
-**Systemd (preferred on Linux):**
+Systemd (optional):
 ```bash
 systemctl --user enable --now pueued
 systemctl --user status pueued
@@ -123,7 +148,7 @@ pueue parallel -g gpu 2
 pueue parallel 0              # 0 = unlimited (default group)
 ```
 
-## Common Agent Patterns
+## Programmatic Usage Patterns
 
 ### Queue a pipeline with dependencies
 ```bash
@@ -154,3 +179,4 @@ pueue status --json | jq ".tasks.\"$id\".result"
 - `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
 - Task IDs are integers; quote them in `jq` with `.tasks.\"$id\"`
 - `pueue clean` only removes finished tasks — running tasks are unaffected
+- Not using `-g` with project name fallback to the `default` group
