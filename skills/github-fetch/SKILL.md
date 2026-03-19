@@ -1,10 +1,10 @@
 ---
-name: github-study
-description: Use this skill when studying GitHub repositories for one-off analysis, reading source code, or fetching single files from GitHub. Triggers include "study this repo", "read source of X", "look at GitHub repo", "fetch file from GitHub", or any request to explore/analyze a GitHub project without making it a permanent workspace.
+name: github-fetch
+description: Use this skill when studying GitHub repositories for one-off analysis, reading source code, or fetching single files from GitHub. Triggers include "study this repo", "install this repo", "read the README of X", "inspect source of X", "fetch file from GitHub", or any request to explore/analyze a GitHub project without making it a permanent workspace.
 color: cyan
 ---
 
-# GitHub Study
+# GitHub Fetch
 
 ## When to Use
 - Studying source code of a GitHub repo for one-off analysis
