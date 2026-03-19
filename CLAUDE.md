@@ -55,3 +55,7 @@ Prefer `--json`/`jc`/`jq` when output is parsed programmatically. For simple che
 
 - When a tool call may return large or noisy output (e.g. Context7, WebSearch, broad codebase search):
     - Delegate to a subagent to protect the main context window
+
+- Before using any field name, API parameter, or identifier from an external system (hook input schemas, CLI flags, APIs, etc.):
+    - Verify it exists by checking docs (Context7/WebFetch) or searching the codebase (Grep/Read)
+    - Do NOT invent or guess names — if you cannot verify, state that explicitly

@@ -137,19 +137,19 @@ def serve_mode(socket_path, invert=False):
         sock.close()
 
 
-def put_mode(socket_path, image_path, invert=False):
-    """Send image path to server, starting server if needed."""
+def put_mode(socket_path, image_paths, invert=False):
+    """Send image paths to server, starting server if needed."""
     if not os.path.exists(socket_path):
         if not open_serve(socket_path, invert):
             # Server failed to start, exit silently
             sys.exit(0)
 
-    real_path = os.path.realpath(image_path)
-
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     try:
         sock.connect(socket_path)
-        sock.sendall(real_path.encode("utf-8") + b"\n")
+        for image_path in image_paths:
+            real_path = os.path.realpath(image_path)
+            sock.sendall(real_path.encode("utf-8") + b"\n")
     finally:
         sock.close()
 
@@ -161,14 +161,14 @@ def main():
         "--socket-path", default=SOCKET_PATH, help="Path to Unix socket (default: %(default)s)"
     )
     parser.add_argument("--invert", action="store_true", help="Invert colors before displaying")
-    parser.add_argument("image_path", nargs="?", help="Path to image file (put mode only)")
+    parser.add_argument("image_paths", nargs="+", help="Paths to image files (put mode only)")
 
     args = parser.parse_args()
 
     if args.serve:
         serve_mode(args.socket_path, args.invert)
-    elif args.image_path:
-        put_mode(args.socket_path, args.image_path, args.invert)
+    elif args.image_paths:
+        put_mode(args.socket_path, args.image_paths, args.invert)
     else:
         parser.print_help()
         sys.exit(1)

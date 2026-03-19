@@ -1,6 +1,6 @@
 ---
 name: pueue
-description: Use when running non-interactive long-running background tasks, queuing multiple commands with dependencies, or needing structured task status tracking. Prefer over tmux for non-interactive tasks. Use tmux instead for TUI apps or processes requiring stdin interaction.
+description: Use when running non-interactive long-running background tasks, queuing multiple commands with dependencies, or needing structured task status tracking.
 ---
 
 # Pueue

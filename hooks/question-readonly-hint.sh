@@ -2,6 +2,13 @@
 set -euo pipefail
 
 input=$(cat)
+
+# Skip in plan mode — user is already in read-only planning context
+permission_mode=$(echo "$input" | jq -r '.permission_mode // ""')
+if [[ "$permission_mode" == "plan" ]]; then
+    exit 0
+fi
+
 user_prompt=$(echo "$input" | jq -r '.prompt // ""')
 
 # Strip trailing whitespace before checking for '?'

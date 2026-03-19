@@ -1,6 +1,6 @@
 ---
 name: long-waits
-description: Use when the user asks you to wait longer than 10 minutes before performing an action, implement delayed execution, schedule tasks for a specific time, or do something after a condition becomes true
+description: Use when wait longer than 10 minutes before performing an action, implement delayed execution, schedule tasks for a specific time, or do something after a condition becomes true
 ---
 
 # Long Waits
