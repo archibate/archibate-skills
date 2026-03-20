@@ -32,14 +32,13 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
     pueue log -l 15 [task id]
     ```
     - `-l 15` means to retrive the last 15 lines of log to protect the main context
-    - Add a short delay before checking if the task just started: `sleep 10`
-    - If task still in progress:
-        - Start `pueue follow [task id]` in background (`run_in_background: true`)
-        - When task completes, you receive `<task-notification>`
-        - Use CronCreate to create a routine check every 10 minutes
-        - Read task log and report progress
-        - Fix if task error or stuck
-        - Use CronDelete on task complete
+- Wait task to complete:
+    - Start `pueue follow [task id]` in background (`run_in_background: true`):
+        - `pueue follow` output logs in real-time, exit when task complete
+        - When task completes, you will receive `<task-notification>` from `pueue follow`
+    - CronCreate: create a cron check every 10 minutes
+    - Read task log and report progress on cron; fix if task error or stuck
+    - CronDelete: stop cron on task complete
 
 ---
 
