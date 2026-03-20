@@ -1,7 +1,6 @@
 ---
 name: just-cli
-user-invocable: false
-description: This skill should be used when the user asks to "create a justfile", "write just recipes", "configure just settings", "add just modules", "use just attributes", "set up task automation", mentions justfile, just command runner, or task automation with just.
+description: TRIGGER when the user mentioned "just", "justfile". TRIGGER before editing justfile or running just commands.
 ---
 
 # Just Command Runner

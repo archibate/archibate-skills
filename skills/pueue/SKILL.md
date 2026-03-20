@@ -1,6 +1,6 @@
 ---
 name: pueue
-description: Starting background tasks using pueue. TRIGGER when running non-interactive long-running tasks run for >2 minutes, or any computation intensive tasks. TRIGGER when user mentioned "pueue", "in background".
+description: TRIGGER when user mentioned "pueue", "in background". TRIGGER when running non-interactive long-running tasks run for >2 minutes, or any computation intensive tasks.
 ---
 
 # Pueue
