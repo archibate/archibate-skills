@@ -7,7 +7,7 @@ set -euo pipefail
 cat > /dev/null
 
 ref_dir="${CLAUDE_PROJECT_DIR:-$(pwd)}"
-main_root=$(git -C "$ref_dir" worktree list 2>/dev/null | head -1 | awk '{print $1}')
+main_root=$(git -C "$ref_dir" worktree list 2>/dev/null | head -1 | awk '{print $1}') || true
 
 [ -n "$main_root" ] || exit 0
 
