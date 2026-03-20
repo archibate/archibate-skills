@@ -39,6 +39,7 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
         - Use CronCreate to create a routine check every 10 minutes
         - Read task log and report progress
         - Fix if task error or stuck
+        - Use CronDelete on task complete
 
 ---
 
