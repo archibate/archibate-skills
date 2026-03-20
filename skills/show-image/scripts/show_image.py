@@ -161,7 +161,7 @@ def main():
         "--socket-path", default=SOCKET_PATH, help="Path to Unix socket (default: %(default)s)"
     )
     parser.add_argument("--invert", action="store_true", help="Invert colors before displaying")
-    parser.add_argument("image_paths", nargs="+", help="Paths to image files (put mode only)")
+    parser.add_argument("image_paths", nargs="*", help="Paths to image files (put mode only)")
 
     args = parser.parse_args()
 
