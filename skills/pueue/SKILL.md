@@ -26,19 +26,8 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
     - `-p 4` means allow up to 4 jobs to run concurrently in this group: prevent system resource exhaustion in CPU, memory, I/O
 - Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
     - Important: Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
-- Check the log and status:
-    ```bash
-    pueue status -g [project-name]
-    pueue log -l 15 [task id]
-    ```
-    - `-l 15` means to retrive the last 15 lines of log to protect the main context
-- Wait task to complete:
-    - Start `pueue follow [task id]` in background (`run_in_background: true`):
-        - `pueue follow` output logs in real-time, exit when task complete
-        - When task completes, you will receive `<task-notification>` from `pueue follow`
-    - CronCreate: create a cron check every 10 minutes
-    - Read task log and report progress on cron; fix if task error or stuck
-    - CronDelete: stop cron on task complete
+- Start `pueue follow [task id]` in background (`run_in_background: true`):
+    - When task completes, you will receive `<task-notification>` from it
 
 ---
 
