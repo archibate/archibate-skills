@@ -4,7 +4,18 @@ Claude Code configuration for archibate personal use.
 
 > Be careful that below setup guide is aimed for Claude Code, may not work universally for all agents. See [dotfiles-opencode](https://github.com/) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
 
-## Install Archibate Skills and Hooks
+### Clone this Repo
+```bash
+git clone https://github.com/archibate/archibate-skills ~/archibate-skills
+```
+
+### Install Archibate Settings
+```bash
+cp ~/.claude/settings.json ~/.claude/settings.json.bak
+cp settings.example.json ~/.claude/settings.json
+```
+
+### Install Archibate Skills and Hooks
 Run my one-shot installation script:
 ```bash
 ./install.sh
