@@ -28,6 +28,9 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
     - Important: Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
 - Start `pueue follow [task id]` in background (`run_in_background: true`):
     - When task completes, you will receive `<task-notification>` from it
+- Set up a periodical check using `long-waits` skill:
+    - Report task status, progress, ETA in structured output
+    - Prevent task stuck, errors
 
 ---
 
