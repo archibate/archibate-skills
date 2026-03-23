@@ -18,15 +18,16 @@ Fallback to the legacy tools when not available.
 
 ## Agent CLI Tools
 
-Prefer `--json`/`jq` when output is parsed programmatically. For simple checks, use direct tools. Fallback to legacy tools when not available.
-
-- `ast-grep` (`sg`) — prefer over regex for code search/rewrite
-- `comby` — structural search/replace when `ast-grep` lacks language support
-- `duckdb` — prefer over pandas for joins/aggregations on CSV/Parquet/JSON
-- `mlr` — streaming row transforms on CSV/TSV/JSON pipelines
-- `jc <cmd>` — wraps legacy tools to produce JSON (e.g. `jc ps aux`)
-- `pueue` — prefer over tmux for non-interactive long-running commands
-- `pdftotext`, `sqlite3`, `hyperfine`
+- `ast-grep` (`sg`)
+- `duckdb`
+- `mlr` (miller)
+- `jc`
+- `gron`
+- `pueue`
+- `gh`
+- `pdftotext`
+- `sqlite3`
+- `hyperfine`
 
 ---
 
