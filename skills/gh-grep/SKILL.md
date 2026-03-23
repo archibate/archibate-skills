@@ -21,7 +21,7 @@ Search for real-world code examples across over a million public GitHub reposito
 Run the CLI script with bun (use absolute path):
 
 ```bash
-bun /home/hazeruno/.config/opencode/skills/gh-grep/scripts/grep.ts searchGitHub --query "<code-pattern>" [options]
+bun scripts/grep.ts searchGitHub --query "<code-pattern>" [options]
 ```
 
 ## Core Options
@@ -61,23 +61,23 @@ For detailed pattern examples and regex usage, see `references/api_reference.md`
 
 ```bash
 # Find Authentication Patterns
-bun /home/hazeruno/.config/opencode/skills/gh-grep/scripts/grep.ts searchGitHub \
+bun scripts/grep.ts searchGitHub \
   --query "getServerSession" --language "TypeScript,TSX"
 
 # Find Error Boundary Implementations
-bun /home/hazeruno/.config/opencode/skills/gh-grep/scripts/grep.ts searchGitHub \
+bun scripts/grep.ts searchGitHub \
   --query "ErrorBoundary" --language "TSX"
 
 # Find useEffect Cleanup with Regex
-bun /home/hazeruno/.config/opencode/skills/gh-grep/scripts/grep.ts searchGitHub \
+bun scripts/grep.ts searchGitHub \
   --query "(?s)useEffect\(\(\) => {.*removeEventListener" --use-regexp true
 
 # Find CORS Handling in Flask
-bun /home/hazeruno/.config/opencode/skills/gh-grep/scripts/grep.ts searchGitHub \
+bun scripts/grep.ts searchGitHub \
   --query "CORS(" --match-case true --language "Python"
 
 # Search Within Specific Repository
-bun /home/hazeruno/.config/opencode/skills/gh-grep/scripts/grep.ts searchGitHub \
+bun scripts/grep.ts searchGitHub \
   --query "createContext" --repo "facebook/react"
 ```
 
