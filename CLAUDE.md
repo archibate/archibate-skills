@@ -39,9 +39,9 @@ Fallback to the legacy tools when not available.
 
 ---
 
-## Rules
+## Background Tasks
 
-- When starting long-running Python tasks run for >2 minutes (e.g. data pipeline, training): Load the `pueue` skill
+Before starting long-running Python tasks run for >2 minutes (e.g. data pipeline, training): Load the `pueue` skill
 
 ---
 
@@ -49,7 +49,6 @@ Fallback to the legacy tools when not available.
 
 When receiving modification/update requests:
 
-- Execute normally without emphasizing "this is a change" or "this is new"
-- No excessive bold, "NEW", "IMPORTANT", or repeated emphasis
+- Execute normally without emphasizing
 - Maintain consistent tone with existing content
 - Changes should blend naturally, not stand out

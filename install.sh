@@ -17,8 +17,16 @@ if test -d ~/.claude; then
     rm -f ~/.claude/CLAUDE.md
     ln -sf $PWD/CLAUDE.md ~/.claude/CLAUDE.md
 
+    echo "[claude] Linking hooks -> ~/.claude/hooks/"
+    mkdir -p ~/.claude/hooks
+    for hook in $PWD/hooks/*; do
+        name=$(basename "$hook")
+        rm -f ~/.claude/hooks/"$name"
+        ln -sf "$hook" ~/.claude/hooks/"$name"
+    done
+
     # Register no-heredoc hook into settings.json
-    hook_script="bash $PWD/hooks/no-heredoc.sh"
+    hook_script="bash ~/.claude/hooks/no-heredoc.sh"
     settings=~/.claude/settings.json
     if test -f "$settings"; then
         # Remove any existing no-heredoc entry, then append fresh
@@ -31,7 +39,7 @@ if test -d ~/.claude; then
         echo "[claude] Registered no-heredoc hook (PreToolUse/Bash) in $settings"
 
         # Register question-readonly-hint hook into settings.json
-        hook_script="bash $PWD/hooks/question-readonly-hint.sh"
+        hook_script="bash ~/.claude/hooks/question-readonly-hint.sh"
         jq --arg cmd "$hook_script" '
             .hooks.UserPromptSubmit //= [] |
             .hooks.UserPromptSubmit = (.hooks.UserPromptSubmit | map(select(.hooks[0].command != $cmd))) +
@@ -40,13 +48,22 @@ if test -d ~/.claude; then
         echo "[claude] Registered question-readonly-hint hook (UserPromptSubmit) in $settings"
 
         # Register link-venv hook into settings.json
-        hook_script="bash $PWD/hooks/link-venv.sh"
+        hook_script="bash ~/.claude/hooks/link-venv.sh"
         jq --arg cmd "$hook_script" '
             .hooks.SessionStart //= [] |
             .hooks.SessionStart = (.hooks.SessionStart | map(select(.hooks[0].command != $cmd))) +
             [{"matcher": "*", "hooks": [{"type": "command", "command": $cmd, "timeout": 10}]}]
         ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
         echo "[claude] Registered link-venv hook (SessionStart) in $settings"
+
+        # Register show-image-on-read hook into settings.json
+        hook_script="bash ~/.claude/hooks/show-image-on-read.sh"
+        jq --arg cmd "$hook_script" '
+            .hooks.PostToolUse //= [] |
+            .hooks.PostToolUse = (.hooks.PostToolUse | map(select(.hooks[0].command != $cmd))) +
+            [{"matcher": "Read", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
+        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
+        echo "[claude] Registered show-image-on-read hook (PostToolUse/Read) in $settings"
     else
         echo "[claude] Skipping hook registration: $settings not found"
     fi
