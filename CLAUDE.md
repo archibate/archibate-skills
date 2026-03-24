@@ -42,3 +42,14 @@ Fallback to the legacy tools when not available.
 ## Rules
 
 - When starting long-running Python tasks run for >2 minutes (e.g. data pipeline, training): Load the `pueue` skill
+
+---
+
+## Writing Style
+
+When receiving modification/update requests:
+
+- Execute normally without emphasizing "this is a change" or "this is new"
+- No excessive bold, "NEW", "IMPORTANT", or repeated emphasis
+- Maintain consistent tone with existing content
+- Changes should blend naturally, not stand out

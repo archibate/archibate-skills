@@ -1,6 +1,6 @@
 ---
 name: pueue
-description: TRIGGER when user mentioned "pueue", "in background". TRIGGER when running non-interactive long-running tasks run for >2 minutes, or any computation intensive tasks.
+description: Comprehensive guide to pueue, a high-performance background task manager. This skill should be used before running non-interactive long-running tasks run for >2 minutes, or needs guidance on the pueue CLI tool usage. TRIGGER when user says "use pueue", "run in background".
 ---
 
 # Pueue

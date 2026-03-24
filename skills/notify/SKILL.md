@@ -1,6 +1,6 @@
 ---
-name: send-notify
-description: Send notifications to the user. TRIGGER when user says "notify me", "send notification", "alert me".
+name: notify
+description: Use this skill to send notifications to the user. TRIGGER when user says "notify me", "send notification", "alert me".
 ---
 
 # Send Notification
