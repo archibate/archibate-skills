@@ -6,7 +6,6 @@
 - `fd` not `find`
 - `exa` not `ls`
 - `sd` not `sed`
-- `xh` not `curl`
 - `just` not `make`
 - `uv` not `pip`
 - `uv run` not `python3`
