@@ -27,7 +27,7 @@ You start background tasks following this strict workflow:
 2. Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
 3. Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
 4. Start `pueue follow [task id]` in background (`run_in_background: true`); when task completes, you will receive `<task-notification>` from it
-5. Report task status, progress, ETA by running `pueue log [task id]` periodically using `long-waits` skill; fix on stuck or error
+5. Report task progress in percentage and ETA by checking `pueue log [task id]` periodically using `long-waits` skill
 
 ---
 
@@ -171,10 +171,10 @@ pueue status --json | jq ".tasks.\"$id\".result"
 
 ## Key Pitfalls
 
+- Always use `long-waits` skill instead of `sleep 60 && ...` boilerplates
 - Always use `--` before commands that have their own flags: `pueue add -- ls -al`
 - Wrap shell pipelines in quotes: `pueue add 'cmd1 | cmd2'`
 - Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
 - `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
 - Task IDs are integers; quote them in `jq` with `.tasks.\"$id\"`
 - `pueue clean` only removes finished tasks — running tasks are unaffected
-- Always use `long-waits` skill instead of `sleep 60 && pueue log` boilerplates.
