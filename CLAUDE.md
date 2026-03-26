@@ -48,6 +48,5 @@ Before starting long-running Python tasks run for >2 minutes (e.g. data pipeline
 
 When receiving modification/update requests:
 
-- Execute normally without emphasizing
 - Maintain consistent tone with existing content
 - Changes should blend naturally, not stand out
