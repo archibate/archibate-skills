@@ -39,7 +39,7 @@ if echo "$command" | grep -qE -- '-c\s+["'"'"']'; then
             print length(content) + 1
         }
     ')
-    if [ "$inline_c_lines" -gt 20 ]; then
+    if [ "$inline_c_lines" -gt 40 ]; then
         has_inline_c=true
     fi
 fi
@@ -59,7 +59,7 @@ if echo "$command" | grep -qF 'EOF_BYPASS_HEREDOC_RESTRICTION'; then
     exit 0
 fi
 
-# Count lines inside heredoc; allow if <= 20
+# Count lines inside heredoc; allow if <= 40
 script_lines=0
 detection_type=""
 if $has_heredoc; then
@@ -78,7 +78,7 @@ elif $has_inline_c; then
     detection_type="Inline -c script"
 fi
 
-if [ "$script_lines" -le 20 ]; then
+if [ "$script_lines" -le 40 ]; then
     exit 0
 fi
 
@@ -118,7 +118,7 @@ case "$interpreter" in
         ;;
 esac
 
-printf '%s >20 lines detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use inline script, add BYPASS_INLINE_SCRIPT_RESTRICTION to the command.\n' \
+printf '%s >40 lines detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use inline script, add BYPASS_INLINE_SCRIPT_RESTRICTION to the command.\n' \
     "$detection_type" "$interpreter" "$example" >&2
 
 exit 2

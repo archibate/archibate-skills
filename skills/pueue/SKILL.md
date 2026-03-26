@@ -173,6 +173,7 @@ pueue status --json | jq ".tasks.\"$id\".result"
 
 - Always use `long-waits` skill instead of `sleep 60 && ...` boilerplates
 - Always use `--` before commands that have their own flags: `pueue add -- ls -al`
+- Always use `-g` with project name to avoid name pollution
 - Wrap shell pipelines in quotes: `pueue add 'cmd1 | cmd2'`
 - Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
 - `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
