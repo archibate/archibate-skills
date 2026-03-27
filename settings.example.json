@@ -1,28 +1,24 @@
 {
+  "env": {
+    "IS_DEMO": "1"
+  },
   "permissions": {
+    "additionalDirectories": [
+      "/tmp"
+    ],
     "allow": [
       "WebSearch",
       "WebFetch",
       "Bash",
       "Read",
       "Skill",
-      "Glob",
-      "Grep",
-      "Write(/*)",
-      "Edit(/*)",
-      "mcp__web-search-prime__webSearchPrime",
-      "mcp__web-reader__webReader",
-      "mcp__zread__get_repo_structure",
-      "mcp__zread__read_file",
-      "mcp__plugin_context7_context7__resolve-library-id",
-      "mcp__plugin_context7_context7__query-docs",
+      "mcp__web-search-prime",
+      "mcp__web-reader",
+      "mcp__zread",
+      "mcp__plugin_context7_context7",
       "mcp__claude_ai_Gmail__gmail_read_message",
       "mcp__grep__searchGitHub",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:www.anthropic.com)",
-      "WebFetch(domain:docs.z.ai)",
-      "Write(//tmp/**)",
-      "Edit(//tmp/**)"
+      "mcp__jina"
     ],
     "ask": [
       "Read(*.env)",
@@ -35,7 +31,6 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "opusplan",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -44,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/archibate-skills/hooks/no-heredoc.sh",
+            "command": "bash ~/.claude/hooks/no-heredoc.sh",
             "timeout": 5
           }
         ]
@@ -54,32 +49,33 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/archibate-skills/hooks/no-cat-write.sh",
+            "command": "bash ~/.claude/hooks/no-cat-write.sh",
             "timeout": 5
           }
         ]
       }
     ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash $HOME/archibate-skills/hooks/question-readonly-hint.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
+    "UserPromptSubmit": [],
     "SessionStart": [
       {
         "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/archibate-skills/hooks/link-venv.sh",
+            "command": "bash ~/.claude/hooks/link-venv.sh",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/show-image-on-read.sh",
+            "timeout": 5
           }
         ]
       }
@@ -106,5 +102,6 @@
     }
   },
   "voiceEnabled": true,
-  "autoMemoryEnabled": true
+  "autoMemoryEnabled": false,
+  "autoDreamEnabled": false
 }
