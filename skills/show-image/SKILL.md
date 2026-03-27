@@ -1,6 +1,6 @@
 ---
 name: show-image
-description: Show images in terminal using the Kitty image protocol. TRIGGER when show/view images in terminal, display plot results.
+description: Show images in terminal using the Kitty image protocol. TRIGGER when show/view images in terminal, display plot results, or after saving any plot or image file to disk.
 ---
 
 # Showing Image in Kitty Terminal

@@ -1,6 +1,6 @@
 ---
 name: uv
-description: Use this skill when using UV (Python package manager), needs to set up Python virtual environments, install/manage Python CLI tools, migrate from pip/pipx to UV, Python version management, or troubleshoot UV-related issues.
+description: This skill should be used when using UV (Python package manager), needs to set up Python virtual environments, install/manage Python CLI tools, migrate from pip/pipx to UV, Python version management, or troubleshoot UV-related issues, or when about to write any `uv run`, `uv add`, or `uv sync` command.
 ---
 
 # UV - Python Package Manager Skill
