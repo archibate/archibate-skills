@@ -25,7 +25,7 @@ You start background tasks following this strict workflow:
 
 1. `pueue status` to check if daemon is started, start with `pueued -d`
 2. Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
-3. Use `pueue add -g [project-name] -- "uv run python -u src/train.py"` to start task in background
+3. Use `pueue add -g [project-name] 'uv run python -u src/train.py'` to start task in background — always pass the full command as a single quoted string
 4. Start `pueue follow [task id]` in background (`run_in_background: true`); when task completes, you will receive `<task-notification>` from it
 5. Report task progress in percentage and ETA by checking `pueue log [task id]` periodically using `long-waits` skill
 
@@ -52,27 +52,33 @@ systemctl --user status pueued
 
 ## Adding Tasks
 
+Always pass the full command as a **single quoted string**. This preserves quoting, env var prefixes, and shell operators exactly as written.
+
 ```bash
 # Basic
-pueue add 'python train.py'
+pueue add 'uv run python -u train.py'
 
-# Use -- when command has its own flags
-pueue add -- python train.py --epochs 100
+# Env var prefix — must be inside the quoted string
+pueue add 'PYTHONUNBUFFERED=1 uv run src/train.py'
+
+# Shell pipeline or &&
+pueue add 'cmd1 | cmd2'
+pueue add 'step1.sh && step2.sh'
 
 # Print only the new task ID (useful for scripting)
-pueue add -p 'python train.py'
+pueue add -p 'uv run python -u train.py'
 
 # With label
-pueue add -l 'training-run' -- python train.py
+pueue add -l 'training-run' 'uv run python -u train.py'
 
 # With working directory
-pueue add -w /path/to/project -- ./run.sh
+pueue add -w /path/to/project './run.sh'
 
 # Start immediately (bypass queue)
-pueue add -i -- python quick_check.py
+pueue add -i 'uv run python -u quick_check.py'
 
 # Stash (don't start automatically)
-pueue add -s -- python heavy_job.py
+pueue add -s 'uv run python -u heavy_job.py'
 pueue start <id>  # start manually later
 ```
 
@@ -149,9 +155,9 @@ pueue parallel 0              # 0 = unlimited (default group)
 
 ### Queue a pipeline with dependencies
 ```bash
-id1=$(pueue add -p -- python preprocess.py)
-id2=$(pueue add -p --after $id1 -- python train.py)
-pueue add --after $id2 -- python evaluate.py
+id1=$(pueue add -p 'uv run python -u preprocess.py')
+id2=$(pueue add -p --after $id1 'uv run python -u train.py')
+pueue add --after $id2 'uv run python -u evaluate.py'
 ```
 
 ### Poll task completion
@@ -171,11 +177,10 @@ pueue status --json | jq ".tasks.\"$id\".result"
 
 ## Key Pitfalls
 
+- Always pass the full command as a single quoted string: `pueue add 'cmd --flag'` — never `pueue add -- cmd --flag`
 - Always use `long-waits` skill instead of `sleep 60 && ...` boilerplates
-- Always use `--` before commands that have their own flags: `pueue add -- ls -al`
 - Always use `-g` with project name to avoid name pollution
-- Wrap shell pipelines in quotes: `pueue add 'cmd1 | cmd2'`
-- Python tasks MUST add the option `-u` or set environment `PYTHONUNBUFFERED=1` for real-time output (otherwise would appear stuck)
+- Python tasks MUST use `-u` flag or `PYTHONUNBUFFERED=1` prefix for real-time output (otherwise appears stuck): `pueue add 'PYTHONUNBUFFERED=1 uv run src/train.py'`
 - `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
 - Task IDs are integers; quote them in `jq` with `.tasks.\"$id\"`
 - `pueue clean` only removes finished tasks — running tasks are unaffected
