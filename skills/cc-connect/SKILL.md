@@ -32,7 +32,7 @@ messaging platforms (Discord, Feishu, Telegram, etc.).
 
 ### When NOT to use
 
-- **Short text message** — response directly
+- **Short text report** — response directly
 - **Service not available** — skip this skill if cc-connect daemon not running
 
 ## Commands
@@ -145,28 +145,26 @@ cc-connect send \
 
 ### "no active session found"
 
-The user has not started a chat session yet. The user must send at least one
-message on the platform before `cc-connect send` can deliver to them. Silently
-skip this skill if this error persists.
-
-### "project not found"
-
-Check available projects with `grep 'name = ' ~/.cc-connect/config.toml` and
-use the exact project name with `-p`.
-
-### Image sent but user didn't receive it
-
 Try specifying the full session key found in daemon logs:
 
 ```bash
 journalctl --user -u cc-connect -n 20 --no-pager | grep session_key
 ```
 
+> If not found: The user has not started a chat session yet. The user
+> must send at least one message on the platform before `cc-connect send`
+> can deliver to them.
+
 Then use the session key:
 
 ```bash
 cc-connect send --image /path/to/img.png -p <project> -s "discord:xxx:xxx" -m "Image"
 ```
+
+### "project not found"
+
+Check available projects with `grep 'name = ' ~/.cc-connect/config.toml` and
+use the exact project name with `-p`.
 
 ### Beta Version Required
 
