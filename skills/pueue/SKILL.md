@@ -26,8 +26,8 @@ You start background tasks following this strict workflow:
 1. `pueue status` to check if daemon is started, start with `pueued -d`
 2. Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
 3. Use `pueue add -g [project-name] 'uv run python -u src/train.py'` to start task in background — always pass the full command as a single quoted string
-4. Start `pueue follow [task id]` in background (`run_in_background: true`); when task completes, you will receive `<task-notification>` from it
-5. Report task progress in percentage and ETA by checking `pueue log [task id]` periodically using `long-waits` skill
+4. Start `pueue follow [task id]` in background (`run_in_background: true`); when task completes, you will receive `<task-notification>` from it — do not poll after this, just wait
+5. Once `<task-notification>` arrives, check output with `pueue log [task id] -f`
 
 ---
 
@@ -160,15 +160,6 @@ id2=$(pueue add -p --after $id1 'uv run python -u train.py')
 pueue add --after $id2 'uv run python -u evaluate.py'
 ```
 
-### Poll task completion
-```bash
-while true; do
-    state=$(pueue status --json | jq -r ".tasks.\"$id\".status")
-    [ "$state" = "Done" ] || [ "$state" = "Failed" ] && break
-    sleep 5
-done
-```
-
 ### Check exit code of finished task
 ```bash
 pueue status --json | jq ".tasks.\"$id\".result"
@@ -178,7 +169,7 @@ pueue status --json | jq ".tasks.\"$id\".result"
 ## Key Pitfalls
 
 - Always pass the full command as a single quoted string: `pueue add 'cmd --flag'` — never `pueue add -- cmd --flag`
-- Always use `long-waits` skill instead of `sleep 60 && ...` boilerplates
+- Never poll `pueue status` in a loop waiting for completion — use `pueue follow <id>` in background and wait for `<task-notification>`
 - Always use `-g` with project name to avoid name pollution
 - Python tasks MUST use `-u` flag or `PYTHONUNBUFFERED=1` prefix for real-time output (otherwise appears stuck): `pueue add 'PYTHONUNBUFFERED=1 uv run src/train.py'`
 - `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
