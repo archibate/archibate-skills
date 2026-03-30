@@ -21,5 +21,22 @@
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "z-ai/glm-4.7",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "z-ai/glm-5",
         "ANTHROPIC_DEFAULT_OPUS_MODEL": "z-ai/glm-5.1"
+    },
+    "desk": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_TOKEN_HERE",
+        "ANTHROPIC_API_KEY": "",
+        "ANTHROPIC_BASE_URL": "https://api.aigcdesk.com",
+        "API_TIMEOUT_MS": "3000000",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    },
+    "codex": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_TOKEN_HERE",
+        "ANTHROPIC_API_KEY": "",
+        "ANTHROPIC_BASE_URL": "https://api.aigcdesk.com",
+        "API_TIMEOUT_MS": "3000000",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-codex-mini",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "gpt-5.3-codex",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "gpt-5.4-xhigh"
     }
 }

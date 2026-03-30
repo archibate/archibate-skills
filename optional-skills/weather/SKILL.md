@@ -1,9 +1,9 @@
 ---
 name: weather
-description: 查询中国地区的天气预报，支持15天及逐小时预报、各种生活指数
+description: Skills to retrive weather forecast for Chinese locations
 ---
 
-# 天气预报
+# 中国天气预报
 查询中国地区的天气预报，支持15天及逐小时预报、各种生活指数
 
 ## 查询命令
