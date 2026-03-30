@@ -1,15 +1,8 @@
 ---
 name: cc-connect
 description: >
-  This skill should be used when the agent needs to send images, files, or
-  notifications back to the user via messaging platforms (Discord, Feishu, etc.)
-  through cc-connect. TRIGGER when: agent generates a plot/chart/screenshot and
-  wants to show the user; agent creates a report/PDF/file the user should
-  receive; agent needs to proactively notify the user (e.g. task completed,
-  alert, reminder); user asks to "send image", "show me the chart", "notify me",
-  "send the file", "send in Discord"; or when the user is away and needs to be
-  alerted. Also TRIGGER when generating any matplotlib/plotly/seaborn chart or
-  visual output that should be delivered to the user.
+  This skill should be used when sending images, files, or notifications back to the user via messaging platforms (Discord, Feishu, Telegram, etc.) through cc-connect.
+  TRIGGER when agent generates a plot/chart/screenshot and wants to show the user; agent creates a report/PDF/file the user should receive; agent needs to proactively notify the user (e.g. task completed, alert, reminder); user asks to "send image", "show me the chart", "notify me", "send the file", "send to Telegram", "show plot in Discord".
 version: 0.1.0
 ---
 
