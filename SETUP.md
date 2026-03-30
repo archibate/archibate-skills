@@ -82,3 +82,12 @@ After complete, you can disable that plugin to save context:
 The plugin is just a bootstrapping tool. Once configured, claude-hud status line will continue to work without this plugin.
 
 If you don't like claude-hud, you can also customize your own using Claude built-in `/statusline` command.
+
+## Troubleshooting
+
+Problem: Starting `claude` in home saying `statusline skipped - restart to fix`
+Fix: Edit `~/.claude/settings.json`, find `"/home/bate"` (where bate is your user name), change:
+```diff
+-"hasTrustDialogAccepted": false,
++"hasTrustDialogAccepted": true,
+```
