@@ -50,7 +50,6 @@ claude mcp add --transport http grep https://mcp.grep.app --scope user
 The `--scope user` option means to configure globally instead of configure in current project.
 
 ### Install Jina MCP
-
 ```bash
 claude mcp add -s user --transport http jina https://mcp.jina.ai/v1 --header "Authorization: Bearer $JINA_API_KEY"
 ```
@@ -58,6 +57,11 @@ claude mcp add -s user --transport http jina https://mcp.jina.ai/v1 --header "Au
 Jina.ai API key can be obtained from https://jina.ai/, with 10M tokens free tier.
 
 See [`jina-ai/MCP`](https://github.com/jina-ai/MCP) for more details.
+
+### Install DeepWiki MCP
+```bash
+claude mcp add -s user -t http deepwiki https://mcp.deepwiki.com/mcp
+```
 
 ## Configure Status Line (claude-hud)
 This will guide you to configure [claude-hud](https://github.com/jarrodwatts/claude-hud), a status line plugin.
