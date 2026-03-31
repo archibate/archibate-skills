@@ -63,14 +63,22 @@ See [`jina-ai/MCP`](https://github.com/jina-ai/MCP) for more details.
 claude mcp add -s user -t http deepwiki https://mcp.deepwiki.com/mcp
 ```
 
-## Configure Status Line (claude-hud)
+Jina MCP capabilities:
+- Search web results, replaces WebSearch.
+- Fetch web pages, replaces WebFetch.
+- Return in LLM-friendly Markdown format.
+- Able to scrape Arxiv, SSRN for papers.
+
+## Configure Plugins
+
+### Configure Status Line (claude-hud)
 This will guide you to configure [claude-hud](https://github.com/jarrodwatts/claude-hud), a status line plugin.
 
 Type in Claude Code, one by one:
 ```
 /plugin marketplace add jarrodwatts/claude-hud
 /plugin install claude-hud
-/reload-plugin
+/reload-plugins
 /claude-hud:setup
 ```
 You can further configure more by ask.
@@ -83,9 +91,33 @@ The plugin is just a bootstrapping tool. Once configured, claude-hud status line
 
 If you don't like claude-hud, you can also customize your own using Claude built-in `/statusline` command.
 
+### Configure Codex Interop (Optional)
+This will guide you to install [codex-plugin-cc](https://github.com/openai/codex-plugin-cc), a plugin to allow Claude Code invoke Codex.
+
+Make sure you have `codex` installed and login. If you are not using `codex`, skip this step - this plugin is not for you.
+
+Type in Claude Code, one by one:
+```
+/plugin marketplace add openai/codex-plugin-cc
+/plugin install codex@openai-codex
+/reload-plugins
+/codex:setup
+```
+
+### Official Plugins Recommendation
+These are the other plugins I installed from Claude official marketplace.
+```
+/plugin install clangd-lsp
+/plugin install claude-md-management
+/plugin install code-simplifier
+/plugin install context7
+/plugin install pyright-lsp
+/reload-plugins
+```
+
 ## Troubleshooting
 
-Problem: Starting `claude` in home saying `statusline skipped - restart to fix`
+Problem: Starting `claude` in home shows warning `statusline skipped - restart to fix`
 Fix: Edit `~/.claude/settings.json`, find `"/home/bate"` (where bate is your user name), change:
 ```diff
 -"hasTrustDialogAccepted": false,
