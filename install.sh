@@ -25,63 +25,32 @@ if test -d ~/.claude; then
         ln -sf "$hook" ~/.claude/hooks/"$name"
     done
 
-    # Register no-heredoc hook into settings.json
-    hook_script="bash ~/.claude/hooks/no-heredoc.sh"
     settings=~/.claude/settings.json
+
+    register_hook() {
+        local event=$1 matcher=$2 timeout=$3 script=$4
+        local hook_cmd="bash ~/.claude/hooks/$script"
+        jq --arg cmd "$hook_cmd" --arg event "$event" --arg matcher "$matcher" --argjson timeout "$timeout" '
+            .hooks[$event] //= [] |
+            .hooks[$event] = (.hooks[$event] | map(select(.hooks[0].command != $cmd))) +
+            [{"matcher": $matcher, "hooks": [{"type": "command", "command": $cmd, "timeout": $timeout}]}]
+        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
+        echo "[claude] Registered $script ($event/$matcher) in $settings"
+    }
+
     if test -f "$settings"; then
-        # Remove any existing no-heredoc entry, then append fresh
-        # Note: settings.json uses hooks wrapper format (hooks under "hooks" key)
-        jq --arg cmd "$hook_script" '
-            .hooks.PreToolUse //= [] |
-            .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
-            [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
-        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
-        echo "[claude] Registered no-heredoc hook (PreToolUse/Bash) in $settings"
-
-        # Register no-cat-write hook into settings.json
-        hook_script="bash ~/.claude/hooks/no-cat-write.sh"
-        jq --arg cmd "$hook_script" '
-            .hooks.PreToolUse //= [] |
-            .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
-            [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
-        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
-        echo "[claude] Registered no-cat-write hook (PreToolUse/Bash) in $settings"
-
-        # Register python-unbuffered hook into settings.json
-        hook_script="bash ~/.claude/hooks/python-unbuffered.sh"
-        jq --arg cmd "$hook_script" '
-            .hooks.PreToolUse //= [] |
-            .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
-            [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
-        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
-        echo "[claude] Registered python-unbuffered hook (PreToolUse/Bash) in $settings"
-
-        # Register link-venv hook into settings.json
-        hook_script="bash ~/.claude/hooks/link-venv.sh"
-        jq --arg cmd "$hook_script" '
-            .hooks.SessionStart //= [] |
-            .hooks.SessionStart = (.hooks.SessionStart | map(select(.hooks[0].command != $cmd))) +
-            [{"matcher": "*", "hooks": [{"type": "command", "command": $cmd, "timeout": 10}]}]
-        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
-        echo "[claude] Registered link-venv hook (SessionStart) in $settings"
-
-        # Register show-image-on-read hook into settings.json
-        hook_script="bash ~/.claude/hooks/show-image-on-read.sh"
-        jq --arg cmd "$hook_script" '
-            .hooks.PostToolUse //= [] |
-            .hooks.PostToolUse = (.hooks.PostToolUse | map(select(.hooks[0].command != $cmd))) +
-            [{"matcher": "Read", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
-        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
-        echo "[claude] Registered show-image-on-read hook (PostToolUse/Read) in $settings"
-
-        # Register modern-tools hook into settings.json
-        hook_script="bash ~/.claude/hooks/modern-tools.sh"
-        jq --arg cmd "$hook_script" '
-            .hooks.PreToolUse //= [] |
-            .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
-            [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
-        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
-        echo "[claude] Registered modern-tools hook (PreToolUse/Bash) in $settings"
+        hooks=(
+            "PreToolUse|Bash|5|no-heredoc.sh"
+            "PreToolUse|Bash|5|no-cat-write.sh"
+            "PreToolUse|Bash|5|python-unbuffered.sh"
+            "PreToolUse|Bash|5|modern-tools.sh"
+            "SessionStart|*|10|link-venv.sh"
+            "PostToolUse|Read|5|show-image-on-read.sh"
+        )
+        for entry in "${hooks[@]}"; do
+            IFS='|' read -r event matcher timeout script <<< "$entry"
+            register_hook "$event" "$matcher" "$timeout" "$script"
+        done
     else
         echo "[claude] Skipping hook registration: $settings not found"
     fi
