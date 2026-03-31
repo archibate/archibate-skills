@@ -4,15 +4,50 @@ Claude Code configuration for archibate personal use.
 
 > Be careful that below setup guide is aimed for Claude Code, may not work universally for all agents. See [dotfiles-opencode](https://github.com/) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
 
+## What's in there?
+
+### Skills
+
+**Agent & Plugin Development:**
+- `agent-development` - Creating autonomous agents for Claude Code plugins
+- `hook-development` - Creating event-driven hooks (PreToolUse, PostToolUse, etc.)
+- `skill-development` - Creating skills for Claude Code plugins
+
+**Automation & Orchestration:**
+- `agent-crew` - Multi-specialist agent orchestration for complex tasks
+- `agent-browser` - Browser automation CLI (navigate, click, screenshot, scrape)
+- `pueue` - Background task management for long-running tasks
+- `long-waits` - Chain sequential sleeps for extended waits (>10 min)
+
+**Code Search & Analysis:**
+- `ast-grep` - AST-based structural code search
+- `code-quality-metrics` - Cyclomatic/cognitive complexity metrics
+
+**Web & Data:**
+- `scrapling` - Web scraping with anti-bot bypass (Cloudflare, etc.)
+- `cc-connect` - Send images/files via messaging platforms (Discord, Telegram)
+
+**Utilities:**
+- `just-cli` - Just command runner documentation
+- `show-image` - Display images in Kitty terminal
+- `grill-me` - Interview user about plans before implementation
+- `skillful` - Force agent to load skills before conversation
+
+### Hooks
+
+- `no-heredoc.sh` - Prevents heredoc anti-patterns
+- `no-cat-write.sh` - Enforces using Write tool instead of `cat >`
+- `no-cat-read.sh` - Enforces using Read tool instead of `cat`
+- `python-unbuffered.sh` - Ensures Python output is unbuffered
+- `modern-tools.sh` - Recommends modern CLI tools (rg, fd, exa, sd, etc.)
+- `link-venv.sh` - Links venv on session start
+- `show-image-on-read.sh` - Displays images when read
+
+## Installation Steps
+
 ### Clone this Repo
 ```bash
 git clone https://github.com/archibate/archibate-skills ~/archibate-skills
-```
-
-### Install Archibate Settings
-```bash
-cp ~/.claude/settings.json ~/.claude/settings.json.bak
-cp settings.example.json ~/.claude/settings.json
 ```
 
 ### Install Archibate Skills and Hooks
@@ -22,7 +57,10 @@ Run my one-shot installation script:
 ```
 
 This will install:
-...PLEASE FILL ME...
+- Skills symlinked to `~/.claude/skills/` (agent-browser, agent-crew, pueue, etc.)
+- CLAUDE.md symlinked to `~/.claude/CLAUDE.md`
+- Hooks symlinked to `~/.claude/hooks/` and registered in `settings.json`
+- Codex integration (if `~/.codex` exists)
 
 ### Configure Archibate Claude Router
 ```bash
@@ -165,15 +203,98 @@ Fix: Edit `~/.claude/settings.json`, find `"/home/bate"` (where bate is your use
 +"hasTrustDialogAccepted": true,
 ```
 
+### Settings Broken?
+If settings doesn't work, you may also copy my example settings:
+```bash
+cp ~/.claude/settings.json ~/.claude/settings.json.bak
+cp settings.example.json ~/.claude/settings.json
+nvim ~/.claude/settings.json  # edit the settings for your own needs
+```
+
 ## Tooling
+
+### AI Coding Agent
+
+Living in terminal:
+- Claude Code (as this repo is for)
+- OpenCode
+- Crush
+- Codex
+- Gemini CLI
+- Kimi CLI
+
+Graphical IDEs:
+- Cursor
+- Kilo/Kiro Code
+- Cline
+
+Poops:
+- OpenFlaw
+
+### AI Models
+
+Here are the models I ever used, personal subjective ranking. Not used models are not listed.
+
+Top tier:
+- Claude Opus 4.6
+
+Tier 1:
+- DeepSeek V3.2
+- GLM-5.1
+- Claude Sonnet 4.6
+
+Tier 2:
+- GLM-5
+- GLM-5-Turbo
+- GPT-5.2-Codex
+- Claude Haiku 4.5
+
+Tier 3:
+- GLM-4.7
+- GPT-5.3-Codex
+
+Here are the subjective ranking of models concluded from my friends and collegues review:
+
+Tier 0:
+- Gemini 3.1 Preview
+- Claude Opus 4.6
+
+Tier 1:
+- GPT-5.4
+
+Tier 2:
+- Kimi K2.5
+- Composer 2 (in Cursor)
+- GLM-5
+- Claude Sonnet 4.6
+
+Tier 3:
+- GLM-4.7
+- GPT-5.3-Codex
+
+Tier 4:
+- Minimax M2.5
+- QWen Coder xxx whatever
 
 ### Modern Terminals
 
 Use a modern terminal to avoid clogging Claude Code.
 
 - Ghostty (recommended by Claude Code official team)
-- Kitty + Tmux (my favorite)
-- Smux, Cmux, Warp...
+- Kitty (my favorite)
+- Smux, Cmux, Warp, WezTerm, Alacritty...
+
+All above terminals have built-in multiplexing functionality, which is important to agentic developers.
+
+For terminal with no or poor built-in multiplexing, use a terminal multiplexing tool.
+
+- Tmux (my favorite)
+- Zellij (claimed to be intuitive but I hate this: too much key bindings, conflict with NeoVim and Claude Code)
+- OpenMux (powered by OpenTUI, same technique in OpenCode)
+
+Reason of my choice:
+- Tmux additionally provides persistency to multiplexing, crucial for SSH (remote server) users
+- Kitty is beautiful (in my aesthetic) and fast, keyboard-first design, fits neatly into my i3wm enviroment
 
 ### Shell
 
