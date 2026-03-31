@@ -13,8 +13,8 @@
       "mcp__web-reader",
       "mcp__zread",
       "mcp__plugin_context7_context7",
-      "mcp__claude_ai_Gmail__gmail_read_message",
-      "mcp__grep__searchGitHub",
+      "mcp__claude_ai_Gmail",
+      "mcp__grep",
       "mcp__deepwiki",
       "mcp__jina"
     ],
@@ -25,6 +25,7 @@
       "Bash(*rm -rf ~*)",
       "Bash(*chmod *-R*)",
       "Bash(*chown *-R*)",
+      "Bash(*tmux *kill-server*)",
       "Bash(*gh *delete*)",
       "Bash(*git commit *--amend*)"
     ],
@@ -53,6 +54,16 @@
           {
             "type": "command",
             "command": "bash ~/.claude/hooks/no-cat-write.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/no-cat-read.sh",
             "timeout": 5
           }
         ]

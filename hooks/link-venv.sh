@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # SessionStart hook: symlink .venv in all git worktrees to the main project's .venv
 # so that `uv run` in any worktree finds already-installed packages.
 set -euo pipefail

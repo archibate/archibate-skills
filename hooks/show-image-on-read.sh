@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # PostToolUse hook: display images in Kitty terminal after Read tool on image files
 set -euo pipefail
 
