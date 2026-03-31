@@ -21,48 +21,62 @@ if [ -z "$bash_cmd" ]; then
     exit 0
 fi
 
-# Extract first word (the command name)
-first_word=$(echo "$bash_cmd" | awk '{print $1}')
-
-# Bypass: if using `command <legacy>` explicitly, allow it
-if [ "$first_word" = "command" ]; then
+# Bypass: check for BYPASS_MODERN_TOOLS_CHECK comment
+if echo "$bash_cmd" | grep -qF 'BYPASS_MODERN_TOOLS_CHECK'; then
     exit 0
 fi
 
-# Check if first word is a legacy command
-modern="${MODERN_MAP[$first_word]:-}"
+# Split command by shell operators (&& || ; | &) and check each part
+parts=$(echo "$bash_cmd" | sed -E 's/(&&|\|\||;|\||&)/\n/g')
 
-if [ -z "$modern" ]; then
-    # Not a legacy command we care about
-    exit 0
-fi
+found_legacy=""
+found_modern=""
+found_rest=""
 
-# Extract just the tool name for existence check (uv run -> uv)
-modern_tool="$modern"
-if [ "$modern" = "uv run" ]; then
-    modern_tool="uv"
-fi
+while IFS= read -r part; do
+    # Trim whitespace
+    part=$(echo "$part" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
-# Check if modern tool exists on system
-if ! command -v "$modern_tool" >/dev/null 2>&1; then
-    # Modern tool not installed, allow legacy
-    exit 0
-fi
+    # Skip empty parts
+    [ -z "$part" ] && continue
+
+    # Extract first word
+    first_word=$(echo "$part" | awk '{print $1}')
+
+    # Skip if using `command <legacy>` bypass
+    [ "$first_word" = "command" ] && continue
+
+    # Check if first word is a legacy command
+    modern="${MODERN_MAP[$first_word]:-}"
+
+    [ -z "$modern" ] && continue
+
+    # Extract tool name for existence check
+    modern_tool="$modern"
+    [ "$modern" = "uv run" ] && modern_tool="uv"
+
+    # Check if modern tool exists
+    if ! command -v "$modern_tool" >/dev/null 2>&1; then
+        continue
+    fi
+
+    # Found a legacy command!
+    found_legacy="$first_word"
+    found_modern="$modern"
+    found_rest=$(echo "$part" | cut -d' ' -f2-)
+    break
+
+done <<< "$parts"
+
+# No legacy command found
+[ -z "$found_legacy" ] && exit 0
 
 # Build suggestion
-rest_of_command=$(echo "$bash_cmd" | cut -d' ' -f2-)
-
-if [ "$modern" = "uv run" ]; then
-    # For python -> uv run, remove the python binary from command
-    suggestion="$modern $rest_of_command"
-else
-    # Direct replacement
-    suggestion="$modern $rest_of_command"
-fi
+suggestion="$found_modern $found_rest"
 
 # Block with helpful message
-printf 'Use %s instead of %s.\n' "$modern" "$first_word" >&2
+printf 'Use %s instead of %s.\n' "$found_modern" "$found_legacy" >&2
 printf '  Suggested: %s\n' "$suggestion" >&2
-printf 'If you must use %s, use: command %s\n' "$first_word" "$bash_cmd" >&2
+printf 'If you belive this is a false positive, add a comment `# BYPASS_MODERN_TOOLS_CHECK` in your command\n' "$found_legacy" >&2
 
 exit 2
