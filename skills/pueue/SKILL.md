@@ -1,13 +1,12 @@
 ---
 name: pueue
 description: This skill should be used before running non-interactive long-running tasks, computation intensive tasks, background tasks, or needs guidance on the pueue CLI tool usage. TRIGGER when user says "use pueue", "run in background", or when about to queue any long-running (>2 min) task.
+allowed-tools: Bash(scripts/pueue_add.sh:*), Bash(pueue:*)
+metadata:
+  compatibility: Claude Code
 ---
 
-# Pueue
-
-## Overview
-
-Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persistently; `pueue` is the client CLI.
+# Pueue - Background Task Manager
 
 ## When to Use
 
@@ -21,157 +20,33 @@ Pueue is a daemon-based task queue manager. The daemon (`pueued`) runs persisten
 
 ## Workflow
 
-You start background tasks following this strict workflow:
+Start tasks with `scripts/pueue_add.sh '...'` in background (`run_in_background: true`) — do not poll after this, just stop and wait.
 
-1. `pueue status` to check if daemon is started, start with `pueued -d`
-2. Create a group for current project using `pueue group add -p 4 [project-name]` if not exist yet
-3. Use `pueue add -g [project-name] 'uv run python -u src/train.py'` to start task in background — always pass the full command as a single quoted string
-4. Start `pueue follow [task id]` in background (`run_in_background: true`); when task completes, you will receive `<task-notification>` from it — do not poll after this, just wait
-5. Once `<task-notification>` arrives, check output with `pueue log [task id] -f`
+When task completes, you will receive `<task-notification>` from it.
 
----
+## Conversation Example
 
-## Daemon Setup
+User:
+Start training in the background.
 
-```bash
-# Start daemon (if not already running via systemd)
-pueued -d
-
-# Check if running (errors if daemon is down)
-pueue status
-
-# Shut down daemon
-pueue shutdown
+Assistant:
 ```
-
-Systemd (optional):
-```bash
-systemctl --user enable --now pueued
-systemctl --user status pueued
+Bash(command: "scripts/pueue_add.sh 'uv run python -u train.py'", run_in_background: true)
 ```
+I've started training in background, will notify you once complete.
+[STOP AND WAIT]
 
-## Adding Tasks
+[~10 minutes passed]
 
-Always pass the full command as a **single quoted string**. This preserves quoting, env var prefixes, and shell operators exactly as written.
+System:
+<task-notification>Background command "..." completed (exit code 0)</task-notification>
 
-```bash
-# Basic
-pueue add 'uv run python -u train.py'
+Assistant:
+[analysis the log and training metric]
+Training complete, here are the metrics:
+...
 
-# Env var prefix — must be inside the quoted string
-pueue add 'PYTHONUNBUFFERED=1 uv run src/train.py'
+## Files in this Skill
 
-# Shell pipeline or &&
-pueue add 'cmd1 | cmd2'
-pueue add 'step1.sh && step2.sh'
-
-# Print only the new task ID (useful for scripting)
-pueue add -p 'uv run python -u train.py'
-
-# With label
-pueue add -l 'training-run' 'uv run python -u train.py'
-
-# With working directory
-pueue add -w /path/to/project './run.sh'
-
-# Start immediately (bypass queue)
-pueue add -i 'uv run python -u quick_check.py'
-
-# Stash (don't start automatically)
-pueue add -s 'uv run python -u heavy_job.py'
-pueue start <id>  # start manually later
-```
-
-## Dependencies
-
-```bash
-# Run after task 3 completes
-pueue add --after 3 -- python step2.py
-
-# Run after tasks 3 AND 4 both complete
-pueue add --after 3 --after 4 -- python final.py
-```
-
-## Status & Output
-
-```bash
-# Human-readable status
-pueue status
-
-# JSON output (for parsing)
-pueue status --json
-
-# Follow a running task (like tail -f)
-pueue follow <id>
-
-# View completed task output
-pueue log <id>
-pueue log <id> --json     # JSON output
-pueue log <id> -f         # full output (not truncated)
-pueue log <id> -l 100     # last 100 lines
-```
-
-## Task Control
-
-```bash
-pueue pause <id>          # pause a task
-pueue start <id>          # resume or start a stashed task
-pueue kill <id>           # kill a running task
-pueue remove <id>         # remove a task (must not be running)
-pueue restart <id>        # re-queue a finished/failed task
-
-pueue pause               # pause entire default group
-pueue start               # resume entire default group
-```
-
-## Cleanup
-
-```bash
-pueue clean               # remove all finished/failed tasks
-pueue clean -s            # remove only successful tasks
-pueue clean -g <group>    # clean specific group only
-```
-
-## Groups & Concurrency
-
-Groups allow separate queues with independent concurrency limits.
-
-```bash
-# Create a group with concurrency limit
-pueue group add gpu -p 1      # max 1 parallel task in "gpu" group
-pueue group add cpu -p 4      # max 4 parallel tasks in "cpu" group
-pueue group                   # list all groups
-pueue group --json            # JSON output
-
-# Assign task to group
-pueue add -g gpu -- python train.py
-
-# Change concurrency limit later
-pueue parallel -g gpu 2
-pueue parallel 0              # 0 = unlimited (default group)
-```
-
-## Programmatic Usage Patterns
-
-### Queue a pipeline with dependencies
-```bash
-id1=$(pueue add -p 'uv run python -u preprocess.py')
-id2=$(pueue add -p --after $id1 'uv run python -u train.py')
-pueue add --after $id2 'uv run python -u evaluate.py'
-```
-
-### Check exit code of finished task
-```bash
-pueue status --json | jq ".tasks.\"$id\".result"
-# Returns: "Success", {"Failed": <exit_code>}, "Killed", etc.
-```
-
-## Key Pitfalls
-
-- Always pass the full command as a single quoted string: `pueue add 'cmd --flag'` — never `pueue add -- cmd --flag`
-- Never poll `pueue status` in a loop waiting for completion — use `pueue follow <id>` in background and wait for `<task-notification>`
-- Always use `-g` with project name to avoid name pollution
-- Python tasks MUST use `-u` flag or `PYTHONUNBUFFERED=1` prefix for real-time output (otherwise appears stuck): `pueue add 'PYTHONUNBUFFERED=1 uv run src/train.py'`
-- `--escape` disables shell syntax (no `&&`, pipes) — avoid for shell pipelines
-- Task IDs are integers; quote them in `jq` with `.tasks.\"$id\"`
-- `pueue clean` only removes finished tasks — running tasks are unaffected
+- Pueue CLI Wrapper for adding a task — `scripts/pueue_add.sh`
+- Pueue CLI Usage Documentation — `references/pueue.md`
