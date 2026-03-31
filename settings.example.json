@@ -73,16 +73,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/python-unbuffered.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
             "command": "bash ~/.claude/hooks/modern-tools.sh",
             "timeout": 5
           }

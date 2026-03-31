@@ -38,7 +38,6 @@ Claude Code configuration for archibate personal use.
 - `no-heredoc.sh` - Prevents heredoc anti-patterns
 - `no-cat-write.sh` - Enforces using Write tool instead of `cat >`
 - `no-cat-read.sh` - Enforces using Read tool instead of `cat`
-- `python-unbuffered.sh` - Ensures Python output is unbuffered
 - `modern-tools.sh` - Recommends modern CLI tools (rg, fd, exa, sd, etc.)
 - `link-venv.sh` - Links venv on session start
 - `show-image-on-read.sh` - Displays images when read
