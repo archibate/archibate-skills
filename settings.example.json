@@ -84,7 +84,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash -c 'plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/claude-hud/claude-hud/*/ 2>/dev/null | xargs -n1 basename | sort -V | tail -1); exec \"/usr/bin/bun\" \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins/cache/claude-hud/claude-hud/${plugin_dir}/src/index.ts\"'"
+    "command": "python3 ~/archibate-skills/statusline.py"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
