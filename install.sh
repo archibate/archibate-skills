@@ -47,6 +47,15 @@ if test -d ~/.claude; then
         ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
         echo "[claude] Registered no-cat-write hook (PreToolUse/Bash) in $settings"
 
+        # Register python-unbuffered hook into settings.json
+        hook_script="bash ~/.claude/hooks/python-unbuffered.sh"
+        jq --arg cmd "$hook_script" '
+            .hooks.PreToolUse //= [] |
+            .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
+            [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
+        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
+        echo "[claude] Registered python-unbuffered hook (PreToolUse/Bash) in $settings"
+
         # Register link-venv hook into settings.json
         hook_script="bash ~/.claude/hooks/link-venv.sh"
         jq --arg cmd "$hook_script" '
@@ -64,6 +73,15 @@ if test -d ~/.claude; then
             [{"matcher": "Read", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
         ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
         echo "[claude] Registered show-image-on-read hook (PostToolUse/Read) in $settings"
+
+        # Register modern-tools hook into settings.json
+        hook_script="bash ~/.claude/hooks/modern-tools.sh"
+        jq --arg cmd "$hook_script" '
+            .hooks.PreToolUse //= [] |
+            .hooks.PreToolUse = (.hooks.PreToolUse | map(select(.hooks[0].command != $cmd))) +
+            [{"matcher": "Bash", "hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]
+        ' "$settings" > /tmp/claude-settings.tmp && mv /tmp/claude-settings.tmp "$settings"
+        echo "[claude] Registered modern-tools hook (PreToolUse/Bash) in $settings"
     else
         echo "[claude] Skipping hook registration: $settings not found"
     fi
