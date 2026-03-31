@@ -9,8 +9,8 @@ declare -A MODERN_MAP=(
     [ls]=exa
     [pip]=uv
     [pipx]=uvx
-    [python]="uv run"
-    [python3]="uv run"
+    [python]="uv run python"
+    [python3]="uv run python3"
 )
 
 input=$(cat)
@@ -53,7 +53,7 @@ while IFS= read -r part; do
 
     # Extract tool name for existence check
     modern_tool="$modern"
-    [ "$modern" = "uv run" ] && modern_tool="uv"
+    [[ "$modern" == "uv run"* ]] && modern_tool="uv"
 
     # Check if modern tool exists
     if ! command -v "$modern_tool" >/dev/null 2>&1; then
