@@ -73,6 +73,17 @@ Report progress using the cc-connect skill to notify user. If cc-connect is not 
 Ignore this instruction if you are already working in progress.
 ```
 
+## Self Verification
+
+Before claiming completion, verify the outcome, criticize carefully.
+
+1. Any Software: unit/intergration/e2e test
+2. Frontend: layout, aesthetics, verified in browser automation
+3. Backend: API endpoints test, security review
+3. Data Science: data quality
+
+If any 1% issues, DO NOT complete, repeatly fix.
+
 ## Risk Mitigation
 
 When encountering risky operations while running autonomously:

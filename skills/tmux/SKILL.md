@@ -1,6 +1,6 @@
 ---
 name: tmux
-description: Remote control tmux sessions for interactive CLIs (python, gdb, etc.) by sending keystrokes and scraping pane output.
+description: Remote control tmux sessions for interactive CLIs (python, gdb, etc.) by sending keystrokes and scraping pane output. TRIGGER when user requests to "operate tmux", "split pane", "run in tmux", "interactive debug", "start REPL", or running interactive CLI commands.
 license: Vibecoded
 ---
 
@@ -21,7 +21,7 @@ tmux -S "$SOCKET" capture-pane -p -J -t "$SESSION":0.0 -S -200  # watch output
 tmux -S "$SOCKET" kill-session -t "$SESSION"                   # clean up
 ```
 
-After starting a session ALWAYS tell the user how to monitor the session by giving them a command to copy paste:
+After starting a session, tell the user how to monitor the session by giving them a command to copy paste:
 
 ```
 To monitor this session yourself:
@@ -30,8 +30,6 @@ To monitor this session yourself:
 Or to capture the output once:
   tmux -S "$SOCKET" capture-pane -p -J -t claude-lldb:0.0 -S -200
 ```
-
-This must ALWAYS be printed right after a session was started and once again at the end of the tool loop.  But the earlier you send it, the happier the user will be.
 
 ## Socket convention
 
