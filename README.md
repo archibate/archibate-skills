@@ -221,11 +221,17 @@ Living in terminal:
 - Codex
 - Gemini CLI
 - Kimi CLI
+- Qwen Coder
+- Pi Agent
 
 Graphical IDEs:
 - Cursor
-- Kilo/Kiro Code
+- Kiro Code
 - Cline
+- Trae
+- Windsurf
+- Warp
+- Qoder
 
 Poops:
 - OpenFlaw
