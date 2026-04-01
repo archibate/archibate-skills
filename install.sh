@@ -46,6 +46,7 @@ if test -d ~/.claude; then
             "PreToolUse|Bash|5|modern-tools.sh"
             "SessionStart|*|10|link-venv.sh"
             "PostToolUse|Read|5|show-image-on-read.sh"
+            "PostToolUse|Write|5|pep723-script.sh"
         )
         for entry in "${hooks[@]}"; do
             IFS='|' read -r event matcher timeout script <<< "$entry"
