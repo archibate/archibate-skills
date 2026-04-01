@@ -9,8 +9,7 @@ hooks:
         - type: command
           command: "bash ./hooks/no-sleep-pueue.sh"
           timeout: 5
-metadata:
-  compatibility: Claude Code
+compatibility: Claude Code
 ---
 
 # Pueue - Background Task Manager
