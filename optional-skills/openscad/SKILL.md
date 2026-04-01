@@ -1,6 +1,6 @@
 ---
 name: openscad
-description: "Create and render OpenSCAD 3D models. Generate preview images from multiple angles, extract customizable parameters, validate syntax, and export STL files for 3D printing platforms like MakerWorld."
+description: Create and render OpenSCAD 3D models. Generate preview images from multiple angles, extract customizable parameters, validate syntax, and export STL files for 3D printing.
 ---
 
 # OpenSCAD Skill
@@ -9,9 +9,9 @@ Create, validate, and export OpenSCAD 3D models. Supports parameter customizatio
 
 ## Prerequisites
 
-OpenSCAD must be installed. Install via Homebrew:
+OpenSCAD must be installed.
 ```bash
-brew install openscad
+openscad --version
 ```
 
 ## Tools

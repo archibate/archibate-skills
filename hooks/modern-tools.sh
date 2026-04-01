@@ -13,6 +13,13 @@ declare -A MODERN_MAP=(
     [python3]="uv run python3"
 )
 
+# Commands that only get a soft hint (not blocked)
+declare -A SOFT_HINTS=(
+    [grep]=1
+    [find]=1
+    [ls]=1
+)
+
 input=$(cat)
 bash_cmd=$(echo "$input" | jq -r '.tool_input.command // ""')
 
@@ -74,7 +81,15 @@ done <<< "$parts"
 # Build suggestion
 suggestion="$found_modern $found_rest"
 
-# Block with helpful message
+# Check if this is a soft hint (grep/find/ls) or hard block
+if [[ -n "${SOFT_HINTS[$found_legacy]:-}" ]]; then
+    # Soft hint: output friendly message but allow through
+    printf '{"systemMessage": "💡 Tip: Consider using %s instead of %s for better performance. Suggested: %s"}\n' \
+        "$found_modern" "$found_legacy" "$suggestion"
+    exit 0
+fi
+
+# Hard block with helpful message
 printf 'Use %s instead of %s.\n' "$found_modern" "$found_legacy" >&2
 printf '  Suggested: %s\n' "$suggestion" >&2
 printf 'If you belive this is a false positive, add a comment `# BYPASS_MODERN_TOOLS_CHECK` in your command\n' "$found_legacy" >&2
