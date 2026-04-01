@@ -18,6 +18,9 @@ declare -A SOFT_HINTS=(
     [grep]=1
     [find]=1
     [ls]=1
+    [pip]=1
+    [python]=1
+    [python3]=1
 )
 
 input=$(cat)
