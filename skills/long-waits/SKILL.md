@@ -1,6 +1,7 @@
 ---
 name: long-waits
 description: TRIGGER when wait longer than 10 minutes, schedule tasks for delayed execution, set up a routine check, wait for background task to complete, or do something after a condition becomes true. TRIGGER when user says "run this X minutes later", "run this every X minutes", "periodically report progress", "watch the log every X minutes", "do X after Y complete", "wait for X then Y".
+compatibility: Claude Code
 ---
 
 # Long Waits

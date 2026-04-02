@@ -5,6 +5,7 @@ description: >
   TRIGGER when user says "run overnight", "keep working on this while I sleep", "autonomous mode",
   "continue without me", "work on this in the background", "I'll be away for a while".
 version: 0.1.0
+compatibility: Claude Code
 disable-model-invocation: true
 user-invocable: true
 ---

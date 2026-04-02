@@ -247,12 +247,12 @@ Tier 1:
 - DeepSeek V3.2
 - GLM-5.1
 - Claude Sonnet 4.6
+- GPT-5.2-Codex
 
 Tier 2:
+- Claude Haiku 4.5
 - GLM-5
 - GLM-5-Turbo
-- GPT-5.2-Codex
-- Claude Haiku 4.5
 
 Tier 3:
 - GLM-4.7
