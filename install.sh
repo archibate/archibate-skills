@@ -93,7 +93,7 @@ if test -d ~/.codex; then
     echo "[codex] Installing skills -> ~/.codex/skills/archibate"
     test -L ~/.codex/skills && rm ~/.codex/skills
     mkdir -p ~/.codex/skills
-    rm -f ~/.codex/skills/archibate
+    rm -rf ~/.codex/skills/archibate
     mkdir -p ~/.codex/skills/archibate
     for skill in $PWD/skills/*; do
         name=$(basename "$skill")
