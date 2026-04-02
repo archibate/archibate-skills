@@ -58,12 +58,53 @@ if test -d ~/.claude; then
     fi
 fi
 
+# Check if skill is compatible with a specific agent
+# Returns 0 if compatible (or no compatibility field), 1 if incompatible
+check_compatibility() {
+    local skill_dir=$1
+    local agent=$2  # "claude" or "codex"
+    local skill_md="$skill_dir/SKILL.md"
+
+    if [[ ! -f "$skill_md" ]]; then
+        return 0  # No SKILL.md, assume compatible
+    fi
+
+    # Extract compatibility field from frontmatter
+    local compatibility=$(sed -n '/^---$/,/^---$/p' "$skill_md" | grep '^compatibility:' | head -1 | cut -d: -f2- | xargs)
+
+    if [[ -z "$compatibility" ]]; then
+        return 0  # No compatibility field, assume universal
+    fi
+
+    # Check if the agent name appears in compatibility (case-insensitive)
+    if echo "$compatibility" | grep -qi "$agent"; then
+        return 0  # Compatible
+    fi
+
+    # Check if it's Claude-only but we're installing to another agent
+    if echo "$compatibility" | grep -qi "claude" && [[ "$agent" != "claude" ]]; then
+        return 1  # Incompatible
+    fi
+
+    return 0  # Assume compatible by default
+}
+
 if test -d ~/.codex; then
     echo "[codex] Installing skills -> ~/.codex/skills/archibate"
     test -L ~/.codex/skills && rm ~/.codex/skills
     mkdir -p ~/.codex/skills
     rm -f ~/.codex/skills/archibate
-    ln -sf $PWD/skills ~/.codex/skills/archibate
+    mkdir -p ~/.codex/skills/archibate
+    for skill in $PWD/skills/*; do
+        name=$(basename "$skill")
+        if ! check_compatibility "$skill" "codex"; then
+            echo "[codex] Skipping $name (incompatible: Claude Code only)"
+            continue
+        fi
+        rm -rf ~/.codex/skills/archibate/"$name"
+        ln -sf "$skill" ~/.codex/skills/archibate/"$name"
+        echo "[codex] Linked $name"
+    done
     echo "[codex] Linking CLAUDE.md -> ~/.codex/AGENTS.md"
     rm -f ~/.codex/AGENTS.md
     ln -sf $PWD/CLAUDE.md ~/.codex/AGENTS.md

@@ -1,6 +1,7 @@
 ---
 name: mcp-duckgo
 description: This skill should be used for web search and content scraping via DuckDuckGo MCP Server.
+disable-model-invocation: true
 ---
 
 # DuckDuckGo Search

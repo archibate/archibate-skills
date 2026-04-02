@@ -1,6 +1,6 @@
 ---
 name: weather
-description: Skills to retrive weather forecast for Chinese locations
+description: Use this skill when need weather forecast in Chinese locations
 ---
 
 # 中国天气预报

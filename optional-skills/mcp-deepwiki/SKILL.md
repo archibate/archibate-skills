@@ -1,6 +1,7 @@
 ---
 name: mcp-deepwiki
 description: Skills for accessing and searching docs in DeepWiki/GitHub’s public code repositories can help users understand open-source project source codes, and users can also ask questions directly about the code docs.
+disable-model-invocation: true
 ---
 
 # DeepWiki

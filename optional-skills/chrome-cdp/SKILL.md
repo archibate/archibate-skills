@@ -7,6 +7,12 @@ description: Interact with local Chrome browser session (only on explicit user a
 
 Lightweight Chrome DevTools Protocol CLI. Connects directly via WebSocket — no Puppeteer, works with 100+ tabs, instant connection.
 
+## Constraints
+
+MUST explicitly ask for user permission before use. Chrome CDP runs in a **headful browser** in user screen. Start using Chrome CDP without user confirmation is **offensive**. User refuse: PAUSE IMMEDIATELY.
+
+Use /agent-browser skill instead if you need headless access to web pages.
+
 ## Prerequisites
 
 - Chrome (or Chromium, Brave, Edge, Vivaldi) with remote debugging enabled: open `chrome://inspect/#remote-debugging` and toggle the switch
