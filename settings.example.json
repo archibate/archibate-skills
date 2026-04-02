@@ -79,6 +79,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/no-background-ampersand.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [],
@@ -104,6 +114,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/pep723-script.sh",
+            "timeout": 5
+          }
+        ]
       }
     ]
   },
@@ -117,13 +137,20 @@
     "clangd-lsp@claude-plugins-official": true,
     "claude-hud@claude-hud": false,
     "code-simplifier@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true
+    "claude-md-management@claude-plugins-official": true,
+    "codex@openai-codex": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
       "source": {
         "source": "github",
         "repo": "jarrodwatts/claude-hud"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
       }
     }
   },
