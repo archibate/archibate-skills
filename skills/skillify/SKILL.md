@@ -9,8 +9,10 @@ allowed-tools:
   - Grep
   - AskUserQuestion
   - Bash(mkdir:*)
-when_to_use: Use when the user wants to turn a completed workflow into a reusable skill. Trigger phrases: "turn this into a skill", "make this reusable", "skillify this", "save this workflow".
+when_to_use: >
+    Use when the user wants to turn a completed workflow into a reusable skill. Trigger phrases: "turn this into a skill", "make this reusable", "skillify this", "save this workflow".
 argument-hint: "[description of the process you want to capture]"
+compatibility: Claude Code
 ---
 
 # Skillify
