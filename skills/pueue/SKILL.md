@@ -56,3 +56,4 @@ Training complete, here are the metrics:
 - `scripts/run_in_pueue.sh` — wraps pueue add with auto daemon start, per-project grouping, and follow
 - `scripts/list_pueue_tasks.sh` — list existing pueue tasks and their status
 - `references/pueue.md` — comprehensive pueue CLI usage documentation
+- `references/multi-task-orchestrating.md` — pattern for when a command internally spawns pueue sub-tasks (orchestrator → workers); requires a second `pueue wait` step to get notified when workers complete
