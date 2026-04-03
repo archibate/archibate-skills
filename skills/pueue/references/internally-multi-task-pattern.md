@@ -1,4 +1,4 @@
-# Multi-Task Orchestrating Pattern
+# Internally Multi-Task Pattern
 
 ## Problem
 

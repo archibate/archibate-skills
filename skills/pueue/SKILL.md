@@ -29,6 +29,43 @@ Start tasks with `scripts/run_in_pueue.sh '...'` in background (`run_in_backgrou
 
 When task completes, you will receive `<task-notification>` from it.
 
+### Flags
+
+- `-p <N>` — Set max parallel tasks for this project group (prevents CPU/memory exhaustion)
+- `-a <ID>` — Run after task ID completes (repeatable for multiple dependencies)
+
+### Examples
+
+```bash
+# Basic usage
+scripts/run_in_pueue.sh 'uv run python -u train.py'
+
+# With parallel limit (max 2 concurrent tasks)
+scripts/run_in_pueue.sh -p 2 -- 'uv run python -u train.py'
+
+# With dependency (run after task 3)
+scripts/run_in_pueue.sh -a 3 -- 'uv run python -u evaluate.py'
+
+# Combined
+scripts/run_in_pueue.sh -p 4 -a 3 -a 5 -- 'uv run python -u analyze.py'
+```
+
+### How It Works
+
+The wrapper script orchestrates task execution through the following steps:
+
+1. **Group Creation** — `pueue group add` creates a project-specific group if it doesn't exist, enabling isolated task management per project
+
+2. **Task Queuing** — `pueue add` enqueues your command into the project group's queue, returning a task ID
+
+3. **Completion Tracking** — `pueue follow [task_id]` subscribes to the task's output stream and blocks until completion, triggering the `<task-notification>` on finish
+
+### Bypassing the Wrapper Script
+
+If you use `pueue add` directly instead of the wrapper script, you **must** start `pueue follow` or `pueue wait` in the background to receive completion notifications. Without this, you will miss the `<task-notification>` when the task finishes.
+
+**Do not poll** (`pueue status` in a loop). The background notification approach is more efficient and non-blocking.
+
 ## Conversation Example
 
 User:
@@ -56,4 +93,4 @@ Training complete, here are the metrics:
 - `scripts/run_in_pueue.sh` — wraps pueue add with auto daemon start, per-project grouping, and follow
 - `scripts/list_pueue_tasks.sh` — list existing pueue tasks and their status
 - `references/pueue.md` — comprehensive pueue CLI usage documentation
-- `references/multi-task-orchestrating.md` — pattern for when a command internally spawns pueue sub-tasks (orchestrator → workers); requires a second `pueue wait` step to get notified when workers complete
+- `references/internally-multi-task-pattern.md` — pattern for when a command internally spawns pueue sub-tasks (orchestrator → workers); requires a second `pueue wait` step to get notified when workers complete

@@ -1,14 +1,33 @@
 #!/bin/bash
 set -euo pipefail
 
-# Usage
-if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 'command arg1 arg2'" >&2
-    echo "  Wraps pueue add with auto daemon start, per-project grouping, and follow." >&2
+# Parse flags
+parallel=""
+after_ids=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p) parallel="$2"; shift 2 ;;
+        -a) after_ids+=("$2"); shift 2 ;;
+        --) shift; command="$*"; break ;;
+        -h|--help)
+            echo "Usage: $0 [-p <parallel>] [-a <task_id>]... -- 'command arg1 arg2'" >&2
+            echo "  -p <N>  Max parallel tasks for this project group (default: unlimited)" >&2
+            echo "  -a <ID> Run after task ID completes (repeatable)" >&2
+            echo "  --      Separator before command (optional if command is a single arg)" >&2
+            exit 0
+            ;;
+        *)  command="$*"; break ;;
+    esac
+done
+
+if [[ -z "${command:-}" ]]; then
+    echo "Usage: $0 [-p <parallel>] [-a <task_id>]... -- 'command arg1 arg2'" >&2
+    echo "  -p <N>  Max parallel tasks for this project group (default: unlimited)" >&2
+    echo "  -a <ID> Run after task ID completes (repeatable)" >&2
+    echo "  --      Separator before command (optional if command is a single arg)" >&2
     exit 1
 fi
-
-command="$1"
 
 # 1. Derive project group name from current working directory
 #    Replace / with - and strip leading -
@@ -26,14 +45,21 @@ if ! pueue status &>/dev/null; then
     echo "✅ Daemon started"
 fi
 
-# 3. Create project group if it doesn't exist
+# 3. Create project group if it doesn't exist (or update parallel limit)
 if ! pueue group --json 2>/dev/null | jq -e --arg g "$group_name" '.[$g]' &>/dev/null; then
-    pueue group add -p 0 "$group_name"
-    echo "✅ Created group: $group_name (parallel: unlimited)"
+    pueue group add -p "${parallel:-0}" "$group_name"
+    echo "✅ Created group: $group_name (parallel: ${parallel:-unlimited})"
+elif [[ -n "$parallel" ]]; then
+    pueue parallel -g "$group_name" "$parallel"
+    echo "✅ Updated group: $group_name (parallel: $parallel)"
 fi
 
-# 4. Add the task
-id=$(pueue add -g "$group_name" --print-task-id -- "$command")
+# 4. Add the task (with optional dependencies)
+after_args=()
+for aid in "${after_ids[@]}"; do
+    after_args+=(--after "$aid")
+done
+id=$(pueue add -g "$group_name" "${after_args[@]}" --print-task-id -- "$command")
 
 if [[ -z "$id" ]]; then
     echo "❌ Failed to add task" >&2
