@@ -60,7 +60,7 @@ export ZHIPU_API_KEY="your-api-key-here"
 ### 方式一：使用辅助脚本（推荐）
 
 ```bash
-python3 ~/.claude/skills/glm-vision/scripts/analyze_image.py \
+python3 scripts/analyze_image.py \
   --image "/path/to/image.jpg" \
   --prompt "请描述这张图片" \
   [--model "glm-4.6v-flash"]
