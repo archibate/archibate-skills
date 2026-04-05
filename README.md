@@ -22,7 +22,9 @@ Windows user please consider use WSL or SSH to remote server for best experience
 
 ### Skills with Dependencies
 
-Some skills require dependent tools installed to work. For example: `just-cli` skill require the `just` tool installed; `tmux` skill of course requires `tmux`.
+Some skills require dependent tools installed to work.
+
+For example: `just-cli` skill require the `just` tool installed; `tmux` skill of course requires `tmux`.
 
 Just type "please install just for me" into Claude Code and it will install for you.
 
