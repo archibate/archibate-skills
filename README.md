@@ -8,6 +8,8 @@ Sharing my Claude Code configuration from personal use.
 
 Note that the setup guide below is aimed at Claude Code, and may not work universally for all agents. See [archibate/dotfiles-opencode](https://github.com/archibate/dotfiles-opencode) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
 
+Fun fact: I recently found that Cursor and OpenCode seems able to automatically compatible to Claude Code configurations under `~/.claude` by default :) So you may install this pack, and expect it to work automatically in Cursor and OpenCode! Already have OpenCode configuration? No worry since OpenCode's compatibility to Claude Code is a union merge, not replacement. You will have both your native OpenCode configuration plus all skills in this Claude Code pack, together in OpenCode sessions. However, Claude Code doesn't respect Cursor and OpenCode settings in contrast.
+
 ### No Warranty On Microshit Windows
 
 Microshit Windows (TM) is simply not friendly to both developers and AI agents: mouse-first, anti-POSIX, anti-developer design.
