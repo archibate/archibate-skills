@@ -292,19 +292,19 @@ Jina MCP capabilities:
 Alternatively, you may install the `jina-ai` skill in `optional-skills` folder.
 
 ##### Jina MCP
-
 Pros:
 - Have higher invocation rate: agents highly tend to use jina.ai instead of built-in WebSearch and WebFetch tools.
 - Seems to have more functionality (e.g. Arxiv and SSRN specialized fetcher).
+
 Cons:
 - Occupies about 1k token in agent context, waste your token if you don't use search and fetch often.
 - May distract the model when working on tasks unrelated to web searches.
 
 ##### Jina Skill
-
 Pros:
 - Save more tokens for most scenarios when Jina is not necessarily used.
 - Saves model attention, prevent distraction in unrelated tasks.
+
 Cons:
 - Agents may forget to use jina.ai instead of built-in web tools.
 - Has less functionality (only search and fetch).
