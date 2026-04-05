@@ -58,7 +58,7 @@ if echo "$command" | grep -qE '\bgit\s+commit\b'; then
 fi
 
 # Explicit bypass marker
-if echo "$command" | grep -qF 'EOF_BYPASS_HEREDOC_RESTRICTION'; then
+if echo "$command" | grep -qF 'BYPASS_HEREDOC_RESTRICTION'; then
     exit 0
 fi
 
@@ -122,7 +122,7 @@ case "$interpreter" in
         ;;
 esac
 
-printf '%s >%s lines detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use inline script, add BYPASS_INLINE_SCRIPT_RESTRICTION to the command.\n' \
+printf '%s >%s lines detected for %s. Use Write tool + temp file instead:\n  %s\nIf you must use inline script, add comment `BYPASS_INLINE_SCRIPT_RESTRICTION` to the first line of command.\n' \
     "$detection_type" "$max_lines" "$interpreter" "$example" >&2
 
 exit 2

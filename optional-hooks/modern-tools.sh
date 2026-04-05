@@ -93,6 +93,6 @@ fi
 # Hard block with helpful message
 printf 'Use %s instead of %s.\n' "$found_modern" "$found_legacy" >&2
 printf '  Suggested: %s\n' "$suggestion" >&2
-printf 'If you belive this is a false positive, add a comment `# BYPASS_MODERN_TOOLS_CHECK` in your command\n' "$found_legacy" >&2
+printf 'If you belive this is a false positive, add comment `BYPASS_MODERN_TOOLS_CHECK` to the first line of command.\n' "$found_legacy" >&2
 
 exit 2

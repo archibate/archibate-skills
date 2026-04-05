@@ -46,6 +46,6 @@ else
     printf '  Bash("scripts/run_in_pueue.sh '\''your-command'\''", run_in_background: true)\n' >&2
 fi
 
-printf '\nIf you must sleep+poll, add BYPASS_SLEEP_PUEUE_CHECK to the command.\n' >&2
+printf '\nIf you must sleep+poll, add comment `BYPASS_SLEEP_PUEUE_CHECK` to the first line of command.\n' >&2
 
 exit 2

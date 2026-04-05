@@ -33,6 +33,6 @@ printf 'Use Read tool instead of cat for reading files.\n' >&2
 if [ -n "$file_path" ]; then
     printf '  Read("%s")\n' "$file_path" >&2
 fi
-printf 'If you must use cat, add BYPASS_CAT_READ to the command.\n' >&2
+printf 'If you must use cat, add comment `BYPASS_CAT_READ` to the first line of command.\n' >&2
 
 exit 2

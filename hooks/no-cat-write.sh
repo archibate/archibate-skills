@@ -21,7 +21,7 @@ if echo "$command" | grep -qE '\bgit\s+commit\b'; then
 fi
 
 # Explicit bypass marker
-if echo "$command" | grep -qF 'EOF_BYPASS_CAT_WRITE'; then
+if echo "$command" | grep -qF 'BYPASS_CAT_WRITE'; then
     exit 0
 fi
 
@@ -34,6 +34,6 @@ printf 'Use Write tool instead of cat heredoc for file writes.\n' >&2
 if [ -n "$file_path" ]; then
     printf '  Write("%s", <content>)\n' "$file_path" >&2
 fi
-printf 'If you must use cat heredoc, add EOF_BYPASS_CAT_WRITE to the command.\n' >&2
+printf 'If you must use cat heredoc, add comment `BYPASS_CAT_WRITE` to the first line of command.\n' >&2
 
 exit 2
