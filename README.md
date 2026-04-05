@@ -12,20 +12,26 @@ Claude Code configuration for archibate personal use.
 - `agent-development` - Creating autonomous agents for Claude Code plugins
 - `hook-development` - Creating event-driven hooks (PreToolUse, PostToolUse, etc.)
 - `skill-development` - Creating skills for Claude Code plugins
+- `skillify` - Capture session workflow into a reusable skill
 
 **Automation & Orchestration:**
 - `agent-crew` - Multi-specialist agent orchestration for complex tasks
 - `agent-browser` - Browser automation CLI (navigate, click, screenshot, scrape)
+- `self-driven` - Autonomous agent for long-running tasks without human intervention
 - `pueue` - Background task management for long-running tasks
-- `long-waits` - Chain sequential sleeps for extended waits (>10 min)
+- `long-waits` - Schedule delayed/recurring tasks for extended waits (>10 min)
+- `tmux` - Remote control tmux sessions for interactive CLIs
 
 **Code Search & Analysis:**
 - `ast-grep` - AST-based structural code search
 - `code-quality-metrics` - Cyclomatic/cognitive complexity metrics
+- `anti-defensive` - Review defensive programming anti-patterns
+- `review-ai-slop` - Review code for AI-generated slop patterns
 
 **Web & Data:**
 - `scrapling` - Web scraping with anti-bot bypass (Cloudflare, etc.)
 - `cc-connect` - Send images/files via messaging platforms (Discord, Telegram)
+- `librarian` - Cache remote git repos locally for reuse
 
 **Utilities:**
 - `just-cli` - Just command runner documentation
@@ -37,10 +43,16 @@ Claude Code configuration for archibate personal use.
 
 - `no-heredoc.sh` - Prevents heredoc anti-patterns
 - `no-cat-write.sh` - Enforces using Write tool instead of `cat >`
-- `no-cat-read.sh` - Enforces using Read tool instead of `cat`
-- `modern-tools.sh` - Recommends modern CLI tools (rg, fd, exa, sd, etc.)
+- `no-background-ampersand.sh` - Prevents `&` background suffix in Bash commands
+- `no-sed-print.sh` - Prevents `sed -n`/`sed -p` patterns
+- `no-sleep-pueue.sh` - Recommends pueue over raw `sleep`
+- `pep723-script.sh` - Auto-adds PEP 723 inline metadata to Python scripts
 - `link-venv.sh` - Links venv on session start
 - `show-image-on-read.sh` - Displays images when read
+
+Optional hooks (in `optional-hooks/`):
+- `no-cat-read.sh` - Enforces using Read tool instead of `cat`
+- `modern-tools.sh` - Recommends modern CLI tools (rg, fd, exa, sd, etc.)
 
 ## Installation Steps
 
@@ -194,9 +206,26 @@ All our configuration (plugins, skills, hooks) in Claude Code will be available 
 
 ## Troubleshooting
 
+### Claude Code Flickering
+Problem: Terminal keep flickering (blinking) when using Claude Code.
+Fix: Edit `~/.claude/settings.json`, add:
+```diff
+{
+  "env": {
+    ...,
+    "CLAUDE_CODE_NO_FLICKER": "1"
+  },
+  ...
+}
+```
+
+> Alternatively, you may add an enviroment variable `export CLAUDE_CODE_NO_FLICKER=1` in your `.bashrc`.
+
+See [`settings.example.json`](settings.example.json) for example.
+
 ### Statusline Error
 Problem: Starting `claude` in home shows warning `statusline skipped - restart to fix`
-Fix: Edit `~/.claude/settings.json`, find `"/home/bate"` (where bate is your user name), change:
+Fix: Edit `~/.claude.json`, find `"/home/bate"` (where bate is your user name), change:
 ```diff
 -"hasTrustDialogAccepted": false,
 +"hasTrustDialogAccepted": true,
