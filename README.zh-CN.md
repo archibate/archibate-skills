@@ -402,7 +402,7 @@ npm install -g cc-connect@beta
 
 按照[官方文档](https://github.com/chenhg5/cc-connect)指南配置各种消息平台。
 
-以 Claude Code 为后端后，Claude Code 中的所有配置（插件、技能、钩子）在 cc-connect 中自动可用。
+配置好 Claude Code 作为后端后，Claude Code 中的所有配置（插件、技能、钩子）在 cc-connect 中都会可用。
 
 ##### 显示图片
 
