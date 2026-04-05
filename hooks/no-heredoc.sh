@@ -4,7 +4,7 @@ set -euo pipefail
 max_lines=80
 
 input=$(cat)
-command=$(echo "$input" | jq -r '.tool_input.command // ""')
+command=$(jq -r '.tool_input.command // ""' <<< "$input")
 
 # Detect heredoc (<<, not <<<)
 has_heredoc=false
@@ -41,6 +41,7 @@ if echo "$command" | grep -qE -- '-c\s+["'"'"']'; then
             print length(content) + 1
         }
     ')
+    inline_c_lines=${inline_c_lines:-0}
     if [ "$inline_c_lines" -gt "$max_lines" ]; then
         has_inline_c=true
     fi
@@ -80,6 +81,7 @@ elif $has_inline_c; then
     detection_type="Inline -c script"
 fi
 
+script_lines=${script_lines:-0}
 if [ "$script_lines" -le "$max_lines" ]; then
     exit 0
 fi

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 input=$(cat)
-command=$(echo "$input" | jq -r '.tool_input.command // ""')
+command=$(jq -r '.tool_input.command // ""' <<< "$input")
 
 # Detect cat with heredoc AND file redirection
 # Pattern: cat << EOF > file, cat > file << EOF, cat << EOF | tee file
