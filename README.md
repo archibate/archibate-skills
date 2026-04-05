@@ -98,6 +98,7 @@ In fact the advertised SWE-bench scores on Zhipu official site are created by ru
 - `show-image` - Display images in Kitty terminal
 - `grill-me` - Interview user about plans before implementation
 - `skillful` - Force agent to load skills before conversation
+- `better-translate` - Best practices for AI-driven English-to-Chinese translation
 
 #### [Optional Skills](optional-skills/)
 
