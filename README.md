@@ -32,9 +32,7 @@ Just type "please install just for me" into Claude Code and it will install for 
 
 ## What's in here?
 
-### Rules
-
-Rule file: [`CLAUDE.md`](CLAUDE.md)
+### [`CLAUDE.md`](CLAUDE.md)
 
 - **Modern Alternatives** - Prefers `rg`, `fd`, `exa`, `sd`, `just`, `uv`, `pnpm` over legacy tools
 - **Agent CLI Tools** - `ast-grep`, `duckdb`, `mlr`, `jc`, `gron`, `pueue`, `gh`, `pdftotext`, `sqlite3`, `hyperfine`
@@ -43,7 +41,7 @@ Rule file: [`CLAUDE.md`](CLAUDE.md)
 - **Writing Style** - Maintain consistent tone, changes should blend naturally
 - **Code Collaboration** - Proactive collaboration, minimal comments, faithful reporting, verify before done (inspired by Anthropic ant mode prompts)
 
-### Skills
+### [Skills](skills/)
 
 **Agent & Plugin Development:**
 - `agent-development` - Creating autonomous agents for Claude Code plugins
@@ -76,7 +74,37 @@ Rule file: [`CLAUDE.md`](CLAUDE.md)
 - `grill-me` - Interview user about plans before implementation
 - `skillful` - Force agent to load skills before conversation
 
-### Hooks
+#### [Optional Skills](optional-skills/)
+
+These skills are **not installed by default**. Copy or symlink the ones you need to `~/.claude/skills/`.
+
+**Web & Data:**
+- `jina-ai` - Jina AI web search and URL-to-Markdown conversion (alternative to Jina MCP)
+- `mcp-deepwiki` - Query DeepWiki for open-source project docs (alternative to DeepWiki MCP)
+- `mcp-duckgo` - Web search and content scraping via DuckDuckGo MCP
+- `bilibili-api` - Bilibili API wrapper (video download, user info, danmaku, live, etc.)
+
+**Development & Design:**
+- `frontend-design` - Design and implement polished frontend interfaces
+- `shader-dev` - GLSL shader techniques (ray marching, SDF, particles, post-processing)
+- `openscad` - Create, preview, and export OpenSCAD 3D models
+- `remotion` - React-based video creation with Remotion
+- `color-themes` - Color palettes for UI/UX and desktop config (i3wm, dunst, etc.)
+
+**AI & Vision:**
+- `glm-vision` - Image analysis using Zhipu GLM-4.6V multimodal model
+- `qwen-asr` - Audio transcription using Qwen ASR (no API key required)
+
+**Browser & Automation:**
+- `chrome-cdp` - Interact with local Chrome browser via DevTools Protocol
+
+**Discovery:**
+- `find-skills` - Discover and install skills from the open agent skills ecosystem
+
+**Lifestyle:**
+- `weather` - Weather forecast for Chinese locations
+
+### [Hooks](hooks/)
 
 - `no-heredoc.sh` - Prevents heredoc anti-patterns
 - `no-cat-write.sh` - Enforces using Write tool instead of `cat >`
@@ -87,7 +115,8 @@ Rule file: [`CLAUDE.md`](CLAUDE.md)
 - `link-venv.sh` - Links venv on session start
 - `show-image-on-read.sh` - Displays images when read
 
-Optional hooks (in `optional-hooks/`):
+#### [Optional Hooks](optional-hooks/)
+
 - `no-cat-read.sh` - Enforces using Read tool instead of `cat`
 - `modern-tools.sh` - Recommends modern CLI tools (rg, fd, exa, sd, etc.)
 
