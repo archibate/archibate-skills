@@ -6,7 +6,7 @@ Sharing my Claude Code configuration from personal use.
 
 ### Designed For Claude Code
 
-Be careful that below setup guide is aimed for Claude Code, may not work universally for all agents. See [dotfiles-opencode](https://github.com/) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
+Note that the setup guide below is aimed at Claude Code, and may not work universally for all agents. See [archibate/dotfiles-opencode](https://github.com/archibate/dotfiles-opencode) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
 
 ### No Warranty On Microshit Windows
 
@@ -14,9 +14,9 @@ Microshit Windows (TM) is simply not friendly to both developers and AI agents: 
 
 AI agents use codes and APIs (not mouse) to investigate and manipulate your system. Windows is against this.
 
-Claude Code (and most other agentic tools) are optimized for Unix platforms. This configuration pack as well: I'm not sure if works well on Windows.
+Claude Code (and most other agentic tools) are optimized for Unix platforms. This configuration pack as well: I'm not sure if it works well on Windows.
 
-Actually Claude Code itself have several known issues on Windows. COmmon examples are UTF-8 compatibility causing clipboard paste Chinese characters as bizzare KunKeenKaw characters, and poor Bash support - LLMs are simply trained to work better in bash rather than powershell (lower hallucination rate).
+Actually Claude Code itself have several known issues on Windows. Common examples are UTF-8 compatibility causing clipboard paste Chinese characters as bizarre characters, and poor Bash support - LLMs are simply trained to work better in bash rather than powershell (lower hallucination rate).
 
 Windows user please consider use WSL or SSH to remote server for best experience.
 
@@ -24,13 +24,24 @@ Windows user please consider use WSL or SSH to remote server for best experience
 
 Some skills require dependent tools installed to work.
 
-For example: `just-cli` skill require the `just` tool installed; `tmux` skill of course requires `tmux`.
+For example: `just-cli` skill requires the `just` tool installed; `tmux` skill of course requires `tmux`.
 
 Just type "please install just for me" into Claude Code and it will install for you.
 
 > May also say "please install latest tmux from source for me" if the one in your package manager is too old, and you don't know how to install traditional C softwares from source. AI agents are good at getting dirty shell jobs done.
 
-## What's in there?
+## What's in here?
+
+### Rules
+
+Rule file: [`.claude/CLAUDE.md`](CLAUDE.md)
+
+- **Modern Alternatives** - Prefers `rg`, `fd`, `exa`, `sd`, `just`, `uv`, `pnpm` over legacy tools
+- **Agent CLI Tools** - `ast-grep`, `duckdb`, `mlr`, `jc`, `gron`, `pueue`, `gh`, `pdftotext`, `sqlite3`, `hyperfine`
+- **Python Preferences** - `uv` for package management, `ruff` + `basedpyright` for linting
+- **Background Tasks** - Load `pueue` skill for long-running tasks (>2 min)
+- **Writing Style** - Maintain consistent tone, changes should blend naturally
+- **Code Collaboration** - Proactive collaboration, minimal comments, faithful reporting, verify before done (inspired by Anthropic ant mode prompts)
 
 ### Skills
 
@@ -93,7 +104,7 @@ First upgrade to latest to enable this option:
 claude update
 ```
 
-Add this enviroment variable to your `.bashrc` (or `.zshrc`) and restart shell:
+Add this environment variable to your `.bashrc` (or `.zshrc`) and restart shell:
 ```bash
 export CLAUDE_CODE_NO_FLICKER=1
 ```
@@ -131,7 +142,7 @@ This will install:
 - Hooks symlinked to `~/.claude/hooks/` and registered in `settings.json`
 - Codex integration (if `~/.codex` exists)
 
-### Install Fish Intergration (optional)
+### Install Fish Integration (optional)
 If you are using `fish` shell, you may add this to your `~/.config/fish/config.fish` or whatever:
 ```fish
 source /path/to/archibate-skills/intergration.fish
@@ -159,7 +170,7 @@ Type in Bash:
 ```bash
 claude mcp add --transport http grep https://mcp.grep.app --scope user
 ```
-The `--scope user` option means to configure globally instead of configure in current project.
+The `--scope user` option means to configure globally instead of configuring in current project.
 
 #### Install Jina MCP
 ```bash
@@ -181,20 +192,20 @@ Alternatively, you may install the `jina-ai` skill in `optional-skills` folder.
 ##### Jina MCP
 
 Pros:
-- Have higher invocation rate: agent highly tend to use jina.ai instead of built-in WebSearch and WebFetch tools.
+- Have higher invocation rate: agents highly tend to use jina.ai instead of built-in WebSearch and WebFetch tools.
 - Seems to have more functionality (e.g. Arxiv and SSRN specialized fetcher).
 Cons:
 - Occupies about 1k token in agent context, waste your token if you don't use search and fetch often.
-- May distracts model when working on tasks unrelated to web searches.
+- May distract the model when working on tasks unrelated to web searches.
 
 ##### Jina Skill
 
-- Pros:
-- Save more tokens for most scenarios when Jina is not necessary used.
+Pros:
+- Save more tokens for most scenarios when Jina is not necessarily used.
 - Saves model attention, prevent distraction in unrelated tasks.
-- Cons:
-- Agents may forget to use jina.ai instead of built-int web tools.
-- Have less functionality (only search and fetch).
+Cons:
+- Agents may forget to use jina.ai instead of built-in web tools.
+- Has less functionality (only search and fetch).
 
 #### Install DeepWiki MCP
 ```bash
@@ -239,9 +250,9 @@ The plugin is just a bootstrapping tool. Once configured, claude-hud status line
 If you don't like claude-hud, you can also customize your own using Claude built-in `/statusline` command.
 
 #### Configure Codex Interop (Optional)
-This will guide you to install [codex-plugin-cc](https://github.com/openai/codex-plugin-cc), a plugin to allow Claude Code invoke Codex.
+This will guide you to install [codex-plugin-cc](https://github.com/openai/codex-plugin-cc), a plugin to allow Claude Code to invoke Codex.
 
-Make sure you have `codex` installed and login.
+Make sure you have `codex` installed and logged in.
 
 If you are not using `codex`, skip this step - this plugin is not for you.
 
@@ -279,7 +290,7 @@ happy
 ```
 
 #### Installing cc-connect
-cc-connect is a tool bridges AI coding agents (Claude Code, Codex, OpenCode, etc.) to your instant messaging platforms (Discord, Feishu, Weixin, Telegram, etc.).
+cc-connect is a tool that bridges AI coding agents (Claude Code, Codex, OpenCode, etc.) to your instant messaging platforms (Discord, Feishu, Weixin, Telegram, etc.).
 
 Replaces OpenFlaw.
 
@@ -299,17 +310,17 @@ Alternatively, if you are in Kitty terminal, you may install the `show-image` sk
 
 ## Troubleshooting
 
-### Outputing Glitch on Long Conversation (when using Zhipu GLM-5)
+### Outputting Glitch on Long Conversation (when using Zhipu GLM-5)
 
 This is a known bug of GLM, not Claude Code.
 
-> I meet this in OpenCode frequently too. Only when using GLM models, never happens in GPT-Codex and Claude models. Some students reports this happens in Gemini too. Might be a problem with sparse attention - Claude and GPT are dense, while GLM/DeepSeek/Gemini are sparse attention.
+> I meet this in OpenCode frequently too. Only when using GLM models, never happens in GPT-Codex and Claude models. Some students report this happens in Gemini too. Might be a problem with sparse attention - Claude and GPT are dense, while GLM/DeepSeek/Gemini are sparse attention.
 
 So GLM advertises 200k context (to match up with their Anthropic competitors), but they are actually only capable of ~128k context :)
 
 Above ~128k context, GLM have a high chance to fail into chaotic glitch response.
 
-To avoid this, trigger auto-compact eariler at `50%`:
+To avoid this, trigger auto-compact earlier at `50%`:
 
 ```bash
 export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=50
@@ -317,12 +328,14 @@ export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=50
 
 So that limits context max to 100k.
 
-However, this only reduces the 'chance' of glitch, but still are cases GLM glitchs at ~30% context, really annoying.
+However, this only reduces the 'chance' of glitch, but still are cases GLM glitches at ~30% context, really annoying.
 
-Switch to expensive model providers (official Claude is best) to elimiate this.
+Switch to expensive model providers (official Claude is best) to eliminate this.
+
+GLM-5.1 is also having lower glitch chance compared to GLM-5 at this time.
 
 ### Claude Code Flickering
-Problem: Terminal keep flickering (blinking) when using Claude Code.
+Problem: Terminal keeps flickering (blinking) when using Claude Code.
 Fix: Edit `~/.claude/settings.json`, add:
 ```diff
 {
@@ -384,7 +397,7 @@ Poops:
 
 #### AI Models
 
-Here are the models I ever used, personal subjective ranking. Not used models are not listed.
+Here are the models I have ever used, personal subjective ranking. Not used models are not listed.
 
 Top tier:
 - Claude Opus 4.6
@@ -404,7 +417,7 @@ Tier 3:
 - GLM-4.7
 - GPT-5.3-Codex
 
-Here are the subjective ranking of models concluded from my friends and collegues review:
+Here are the subjective ranking of models concluded from my friends and colleagues review:
 
 Tier 0:
 - Gemini 3.1 Preview
@@ -425,7 +438,7 @@ Tier 3:
 
 Tier 4:
 - Minimax M2.5
-- QWen Coder xxx whatever
+- Qwen Coder xxx whatever
 
 #### Modern Terminals
 
@@ -445,13 +458,13 @@ For terminal with no or poor built-in multiplexing, use a terminal multiplexing 
 
 Reason of my choice:
 - Tmux additionally provides persistency to multiplexing, crucial for SSH (remote server) users
-- Kitty is beautiful (in my aesthetic) and fast, keyboard-first design, fits neatly into my i3wm enviroment
+- Kitty is beautiful (in my aesthetic) and fast, keyboard-first design, fits neatly into my i3wm environment
 
 #### Shell
 
 Setting default shell to other than `bash` is okay for Claude Code, as Claude Code always uses `bash -c '<command>'` for their `Bash` tool, no compatibility issues.
 
-> Thus, please make sure your bash has reasonable configuration in `~/.bashrc`, otherwise may slowdown `Bash` tool execution in Claude Code.
+> Thus, please make sure your bash has reasonable configuration in `~/.bashrc`, otherwise may slow down `Bash` tool execution in Claude Code.
 
 On the other hand, OpenCode have an issue of invoking `$SHELL` instead of `bash -ic` for their 'Bash' tool, which may confuse the LLM agent, make sure to alias `SHELL=/bin/bash opencode` to prevent compatibility issues if you are using fish.
 
@@ -498,8 +511,8 @@ I've already documented them in [`CLAUDE.md`](CLAUDE.md).
 
 Check out my other configurations:
 
-- Dotfiles (Kitty & i3wm) - [https://github.com/archibate/dotfiles]
-- Tmux - [https://github.com/archibate/dotfiles-tmux]
-- NeoVim - [https://github.com/archibate/dotfiles-nvim]
-- Fish Shell - [https://github.com/archibate/dotfiles-fish]
-- OpenCode - [https://github.com/archibate/dotfiles-opencode]
+- Dotfiles (Kitty & i3wm) - [archibate/dotfiles](https://github.com/archibate/dotfiles)
+- Tmux - [archibate/dotfiles-tmux](https://github.com/archibate/dotfiles-tmux)
+- NeoVim - [archibate/dotfiles-nvim](https://github.com/archibate/dotfiles-nvim)
+- Fish Shell - [archibate/dotfiles-fish](https://github.com/archibate/dotfiles-fish)
+- OpenCode - [archibate/dotfiles-opencode](https://github.com/archibate/dotfiles-opencode)
