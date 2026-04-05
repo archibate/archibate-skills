@@ -87,13 +87,24 @@ Optional hooks (in `optional-hooks/`):
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-> If you've already installed, run `claude update` to get latest version.
+#### Fix Terminal Flickering Problem
+First upgrade to latest to enable this option:
+```bash
+claude update
+```
 
-#### Switching Model Providers (optional)
-Official Claude models are expensive. Students may prefer cheaper domestic model providers. For example, to set up Zhipu's GLM:
+Add this enviroment variable to your `.bashrc` (or `.zshrc`) and restart shell:
+```bash
+export CLAUDE_CODE_NO_FLICKER=1
+```
+
+#### Switching Model Providers
+Official Claude models are expensive. Some students may prefer cheaper domestic models.
+
+To set up Zhipu's GLM, add these to your `.bashrc` (or `.zshrc`) and restart shell:
 
 ```bash
-export ANTHROPIC_AUTH_TOKEN=ZHIPU_API_KEY
+export ANTHROPIC_AUTH_TOKEN=ZHIPU_API_KEY  # replace this by your Zhipu API key
 export ANTHROPIC_API_KEY=
 export ANTHROPIC_BASE_URL=https://open.bigmodel.cn/api/anthropic
 export API_TIMEOUT_MS=3000000
@@ -102,7 +113,6 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.7
 export ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5
 export ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1
 ```
-> replace `ZHIPU_API_KEY` by your Zhipu API key.
 
 ### Clone this Repo
 ```bash
