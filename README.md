@@ -489,11 +489,19 @@ Living in terminal:
 Graphical IDEs:
 - Cursor
 - Kiro Code
-- Cline
 - Trae
 - Windsurf
 - Warp
 - Qoder
+
+IDE Plugins:
+- Claude Code (VS Code & JetBrains)
+- OpenCode (VS Code)
+- Codex (VS Code)
+- Cline (VS Code)
+- Kilo Code (VS Code)
+- GitHub Copilot (VS Code)
+- CodeBuddy (VS Code)
 
 Poops:
 - OpenFlaw
