@@ -1,8 +1,32 @@
 # Archibate's Claude - Setup Guide
 
-Claude Code configuration for archibate personal use.
+Sharing my Claude Code configuration from personal use.
 
-> Be careful that below setup guide is aimed for Claude Code, may not work universally for all agents. See [dotfiles-opencode](https://github.com/) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
+## Known Limitations
+
+### Designed For Claude Code
+
+Be careful that below setup guide is aimed for Claude Code, may not work universally for all agents. See [dotfiles-opencode](https://github.com/) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
+
+### No Warranty On Microshit Windows
+
+Microshit Windows (TM) is simply not friendly to both developers and AI agents: mouse-first, anti-POSIX, anti-developer design.
+
+AI agents use codes and APIs (not mouse) to investigate and manipulate your system. Windows is against this.
+
+Claude Code (and most other agentic tools) are optimized for Unix platforms. This configuration pack as well: I'm not sure if works well on Windows.
+
+Actually Claude Code itself have several known issues on Windows. COmmon examples are UTF-8 compatibility causing clipboard paste Chinese characters as bizzare KunKeenKaw characters, and poor Bash support - LLMs are simply trained to work better in bash rather than powershell (lower hallucination rate).
+
+Windows user please consider use WSL or SSH to remote server for best experience.
+
+### Skills with Dependencies
+
+Some skills require dependent tools installed to work. For example: `just-cli` skill require the `just` tool installed; `tmux` skill of course requires `tmux`.
+
+Just type "please install just for me" into Claude Code and it will install for you.
+
+> May also say "please install latest tmux from source for me" if the one in your package manager is too old, and you don't know how to install traditional C softwares from source. AI agents are good at getting dirty shell jobs done.
 
 ## What's in there?
 
@@ -56,12 +80,20 @@ Optional hooks (in `optional-hooks/`):
 
 ## Installation Steps
 
+### Install Claude Code (if not yet)
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+> If you've already installed, make sure to run `claude update` to get latest version for new features.
+
 ### Clone this Repo
 ```bash
 git clone https://github.com/archibate/archibate-skills ~/archibate-skills
 ```
 
-### Install Archibate Skills and Hooks
+### Install Skills and Hooks
 Run my one-shot installation script:
 ```bash
 ./install.sh
@@ -73,35 +105,37 @@ This will install:
 - Hooks symlinked to `~/.claude/hooks/` and registered in `settings.json`
 - Codex integration (if `~/.codex` exists)
 
-### Configure Archibate Claude Router
-```bash
-cp router.example.json router.json
-```
-Then edit `router.json` to fill your model providers and API keys.
-
-### Install Archibate Fish Intergration
-Add this to your `~/.config/fish/config.fish` or whatever:
+### Install Fish Intergration (optional)
+If you are using `fish` shell, you may add this to your `~/.config/fish/config.fish` or whatever:
 ```fish
 source /path/to/archibate-skills/intergration.fish
 ```
 Where `/path/to/archibate-skills` is path to this project.
 
-## Configure MCP Servers
+This adds `commit` alias and the claude code router in this project as `claude` alias.
 
-### Install Context7 MCP
+To configure the claude code router:
+```bash
+cp router.example.json router.json
+```
+Then edit `router.json` to fill your model providers and API keys.
+
+### Configure MCP Servers
+
+#### Install Context7 MCP
 Type in Claude Code:
 ```
 /plugin install context7
 ```
 
-### Install gh-grep MCP
+#### Install gh-grep MCP
 Type in Bash:
 ```bash
 claude mcp add --transport http grep https://mcp.grep.app --scope user
 ```
 The `--scope user` option means to configure globally instead of configure in current project.
 
-### Install Jina MCP
+#### Install Jina MCP
 ```bash
 claude mcp add -s user --transport http jina https://mcp.jina.ai/v1 --header "Authorization: Bearer $JINA_API_KEY"
 ```
@@ -110,20 +144,55 @@ Jina.ai API key can be obtained from https://jina.ai/, with 10M tokens free tier
 
 See [`jina-ai/MCP`](https://github.com/jina-ai/MCP) for more details.
 
-### Install DeepWiki MCP
-```bash
-claude mcp add -s user -t http deepwiki https://mcp.deepwiki.com/mcp
-```
-
 Jina MCP capabilities:
 - Search web results, replaces WebSearch.
 - Fetch web pages, replaces WebFetch.
 - Return in LLM-friendly Markdown format.
 - Able to scrape Arxiv, SSRN for papers.
 
-## Configure Plugins
+Alternatively, you may install the `jina-ai` skill in `optional-skills` folder.
 
-### Configure Status Line (claude-hud)
+##### Jina MCP
+
+Pros:
+- Have higher invocation rate: agent highly tend to use jina.ai instead of built-in WebSearch and WebFetch tools.
+- Seems to have more functionality (e.g. Arxiv and SSRN specialized fetcher).
+Cons:
+- Occupies about 1k token in agent context, waste your token if you don't use search and fetch often.
+- May distracts model when working on tasks unrelated to web searches.
+
+##### Jina Skill
+
+- Pros:
+- Save more tokens for most scenarios when Jina is not necessary used.
+- Saves model attention, prevent distraction in unrelated tasks.
+- Cons:
+- Agents may forget to use jina.ai instead of built-int web tools.
+- Have less functionality (only search and fetch).
+
+#### Install DeepWiki MCP
+```bash
+claude mcp add -s user -t http deepwiki https://mcp.deepwiki.com/mcp
+```
+
+Alternatively, you may install the `mcp-deepwiki` skill in `optional-skills` folder.
+
+The Pros and Cons are similar as above Jina MCP vs skill.
+
+### Configure Plugins
+
+#### Claude Official Plugins Recommended
+These are the other plugins I installed from Claude official marketplace.
+```
+/plugin install clangd-lsp
+/plugin install claude-md-management
+/plugin install code-simplifier
+/plugin install context7
+/plugin install pyright-lsp
+/reload-plugins
+```
+
+#### Configure Status Line (claude-hud)
 This will guide you to configure [claude-hud](https://github.com/jarrodwatts/claude-hud), a status line plugin.
 
 Type in Claude Code, one by one:
@@ -143,10 +212,12 @@ The plugin is just a bootstrapping tool. Once configured, claude-hud status line
 
 If you don't like claude-hud, you can also customize your own using Claude built-in `/statusline` command.
 
-### Configure Codex Interop (Optional)
+#### Configure Codex Interop (Optional)
 This will guide you to install [codex-plugin-cc](https://github.com/openai/codex-plugin-cc), a plugin to allow Claude Code invoke Codex.
 
-Make sure you have `codex` installed and login. If you are not using `codex`, skip this step - this plugin is not for you.
+Make sure you have `codex` installed and login.
+
+If you are not using `codex`, skip this step - this plugin is not for you.
 
 Type in Claude Code, one by one:
 ```
@@ -156,20 +227,10 @@ Type in Claude Code, one by one:
 /codex:setup
 ```
 
-### Official Plugins Recommendation
-These are the other plugins I installed from Claude official marketplace.
-```
-/plugin install clangd-lsp
-/plugin install claude-md-management
-/plugin install code-simplifier
-/plugin install context7
-/plugin install pyright-lsp
-/reload-plugins
-```
+### Configuring Remote Control
+Read this section if you'd like to control Claude Code from mobile. Here's my approaches:
 
-## Mobile Remote Control (Optional)
-
-### Official Remote Control
+#### Official Remote Control
 Enabling remote control in Claude mobile app:
 ```bash
 claude remote-control
@@ -184,14 +245,14 @@ Cons:
 - Requires Claude Pro paid subscription.
 - Poor optimization at this moment.
 
-### Third-party Remote Control
+#### Third-party Remote Control
 [happy](https://github.com/slopus/happy) is a mobile and web client for Claude Code & Codex.
 ```bash
 npm install -g happy-coder
 happy
 ```
 
-### Installing cc-connect
+#### Installing cc-connect
 cc-connect is a tool bridges AI coding agents (Claude Code, Codex, OpenCode, etc.) to your instant messaging platforms (Discord, Feishu, Weixin, Telegram, etc.).
 
 Replaces OpenFlaw.
@@ -203,6 +264,12 @@ npm install -g cc-connect@beta
 You can configure various messaging platforms following the [official document](https://github.com/chenhg5/cc-connect) guide.
 
 All our configuration (plugins, skills, hooks) in Claude Code will be available in cc-connect once Claude Code configured as backend.
+
+##### Showing Images
+
+Claude Code lives in terminal can't show images. The `cc-connect` skill allows agent to send back images and files via your configured messaging platforms.
+
+Alternatively, if you are in Kitty terminal, you may install the `show-image` skill in `optional-skills`. This skill is able to show image directly in Kitty terminal (thanks to the Kitty image protocol).
 
 ## Troubleshooting
 
@@ -239,9 +306,11 @@ cp settings.example.json ~/.claude/settings.json
 nvim ~/.claude/settings.json  # edit the settings for your own needs
 ```
 
-## Tooling
+## Miscellaneous
 
-### AI Coding Agent
+### Tooling Recommendation
+
+#### AI Coding Agent
 
 Living in terminal:
 - Claude Code (as this repo is for)
@@ -265,7 +334,7 @@ Graphical IDEs:
 Poops:
 - OpenFlaw
 
-### AI Models
+#### AI Models
 
 Here are the models I ever used, personal subjective ranking. Not used models are not listed.
 
@@ -310,7 +379,7 @@ Tier 4:
 - Minimax M2.5
 - QWen Coder xxx whatever
 
-### Modern Terminals
+#### Modern Terminals
 
 Use a modern terminal to avoid clogging Claude Code.
 
@@ -330,7 +399,7 @@ Reason of my choice:
 - Tmux additionally provides persistency to multiplexing, crucial for SSH (remote server) users
 - Kitty is beautiful (in my aesthetic) and fast, keyboard-first design, fits neatly into my i3wm enviroment
 
-### Shell
+#### Shell
 
 Setting default shell to other than `bash` is okay for Claude Code, as Claude Code always uses `bash -c '<command>'` for their `Bash` tool, no compatibility issues.
 
@@ -340,19 +409,19 @@ On the other hand, OpenCode have an issue of invoking `$SHELL` instead of `bash 
 
 Feel free to set default shell to `zsh` or `fish` if you are using Claude Code. So I set my default shell to `fish` which is my favorite.
 
-### Editor
+#### Editor
 
 I use NeoVim. Coupled with Claude Code, NeoVim is not responsible for writing code, but for writing Markdown files and prompts.
 
 I set `$EDITOR` to `nvim` so that Claude Code starts NeoVim when pressing `C-g` (edit long prompts in NeoVim)
 
-### File Manager
+#### File Manager
 
 A terminal file manager works better than manual `mv` and `cp` in shell.
 
 So `yazi` is a cool choice but, I personally prefer use the `oil.nvim` plugin of NeoVim which is super intuitive to Vim users - just watch their demo video, and you will understand why.
 
-### Modern CLI Tools
+#### Modern CLI Tools
 
 These CLI tools are in knowledge cutoff time in most LLM models and nice for agent use:
 

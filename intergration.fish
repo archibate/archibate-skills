@@ -5,15 +5,15 @@ function claude
     $CLAUDE_TOOLS_DIR/claude-router.py $argv
 end
 
-if command -sq claude-chill
-    function claude-chill
-        set -lx PYTHONUNBUFFERED 1
-        set -l CLAUDE_TOOLS_DIR (path dirname (status --filename))
-        set -lx AGENT_BROWSER_SESSION (basename $PWD)-(command -sq openssl; and openssl rand -hex 8; or random)
-        # cargo install --git https://github.com/davidbeesley/claude-chill
-        command claude-chill -- $CLAUDE_TOOLS_DIR/claude-router.py $argv
-    end
-end
+# if command -sq claude-chill
+#     function claude-chill
+#         set -lx PYTHONUNBUFFERED 1
+#         set -l CLAUDE_TOOLS_DIR (path dirname (status --filename))
+#         set -lx AGENT_BROWSER_SESSION (basename $PWD)-(command -sq openssl; and openssl rand -hex 8; or random)
+#         # cargo install --git https://github.com/davidbeesley/claude-chill
+#         command claude-chill -- $CLAUDE_TOOLS_DIR/claude-router.py $argv
+#     end
+# end
 
 if not command -sq commit
     function commit
