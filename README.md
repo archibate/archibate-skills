@@ -120,6 +120,10 @@ These skills are **not installed by default**. Copy or symlink the ones you need
 - `no-cat-read.sh` - Enforces using Read tool instead of `cat`
 - `modern-tools.sh` - Recommends modern CLI tools (rg, fd, exa, sd, etc.)
 
+### Example Settings
+
+Read [`settings.example.json`](settings.example.json) for my personal setup. You may update your `~/.claude/settings.json` accordingly if you find it make sense.
+
 ## Installation Steps
 
 ### Install Claude Code (if not yet)
