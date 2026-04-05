@@ -1,5 +1,7 @@
 # Archibate's Claude - Setup Guide
 
+**English** | [中文 译 GLM-5.1](README.zh-CN.md)
+
 Sharing my Claude Code configuration from personal use.
 
 ## Known Limitations
