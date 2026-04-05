@@ -110,7 +110,7 @@ These skills are **not installed by default**. Copy or symlink the ones you need
 - `no-cat-write.sh` - Enforces using Write tool instead of `cat >`
 - `no-background-ampersand.sh` - Prevents `&` background suffix in Bash commands
 - `no-sed-print.sh` - Prevents `sed -n`/`sed -p` patterns
-- `no-sleep-pueue.sh` - Recommends pueue over raw `sleep`
+- `no-sleep-pueue.sh` - Recommends `pueue follow` over `sleep` poll
 - `pep723-script.sh` - Auto-adds PEP 723 inline metadata to Python scripts
 - `link-venv.sh` - Links venv on session start
 - `show-image-on-read.sh` - Displays images when read
