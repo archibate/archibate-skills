@@ -5,13 +5,13 @@ Sharing my Claude Code configuration from personal use.
 ## Known Limitations
 
 ### Designed For Claude Code
-
 Note that the setup guide below is aimed at Claude Code, and may not work universally for all agents. See [archibate/dotfiles-opencode](https://github.com/archibate/dotfiles-opencode) if you are looking for OpenCode configuration, which is an open-source alternative for Claude Code.
 
-Fun fact: I recently found that Cursor and OpenCode seems able to automatically compatible to Claude Code configurations under `~/.claude` by default :) So you may install this pack, and expect it to work automatically in Cursor and OpenCode! Already have OpenCode configuration? No worry since OpenCode's compatibility to Claude Code is a union merge, not replacement. You will have both your native OpenCode configuration plus all skills in this Claude Code pack, together in OpenCode sessions. However, Claude Code doesn't respect Cursor and OpenCode settings in contrast.
+Fun fact: I recently found that Cursor and OpenCode seems able to automatically compatible to Claude Code configurations under `~/.claude` by default :) So you may install this pack, and expect it to work automatically in Cursor and OpenCode!
+
+Already have OpenCode configuration? No worry since OpenCode's compatibility to Claude Code is a union merge, not replacement. You will have both your native OpenCode configuration plus all skills in this Claude Code pack, together in OpenCode sessions.
 
 ### No Warranty On Microshit Windows
-
 Microshit Windows (TM) is simply not friendly to both developers and AI agents: mouse-first, anti-POSIX, anti-developer design.
 
 AI agents use codes and APIs (not mouse) to investigate and manipulate your system. Windows is against this.
@@ -23,7 +23,6 @@ Actually Claude Code itself have several known issues on Windows. Common example
 Windows user please consider use WSL or SSH to remote server for best experience.
 
 ### Skills with Dependencies
-
 Some skills require dependent tools installed to work.
 
 For example: `just-cli` skill requires the `just` tool installed; `tmux` skill of course requires `tmux`.
@@ -31,6 +30,28 @@ For example: `just-cli` skill requires the `just` tool installed; `tmux` skill o
 Just type "please install just for me" into Claude Code and it will install for you.
 
 > May also say "please install latest tmux from source for me" if the one in your package manager is too old, and you don't know how to install traditional C softwares from source. AI agents are good at getting dirty shell jobs done.
+
+### Account Banning Concerns
+Read this section only if you are using Claude official subscription. Common ban reasons are:
+
+1. Using Claude subscription in OpenClaw, OpenCode, Codex - Claude subscription is for Claude Code and Claude Desktop only. The OAuth2 of OpenClaw is misleading, can ruin your Claude account! You can only use Claude as API billing in OpenClaw, not as subscription.
+2. Using a poor VPN provider; Quickly switching IP locations - Anthropic bans suspectious user IPs as a risk control policy.
+3. Continue to use the same enviroment and location after ban - Claude Code records various fingerprints, including `git config user.email`, according to my inspection into CC source code. Your fingerprint might get blacklisted after one ban, even if you buy a new account from Taobao. This explains why some people get banned again and again after first ban.
+
+Critical information: You should get full refund in money when being banned. You can get ALL your money back, not part of it. If a Taobao purchased Claude account doesn't revoke all money back on banned:
+
+This Taobao merchant is a sneaky theft! they steal and sell your account with money-making API router sites, purposingly make your account get banned!
+- Anthropic: oh this is a risky account! we need to ban it and refund their money.
+- Merchant: eat all the money Anthropic refunds, and told you this is "Anthropic's fault".
+- You: believed, oh fuck Anthropic, and you say "thank" to these thefts.
+
+For my case, I brought a Claude subscription on Taobao last month, and I've never been banned by Claude subscription since then. I never greed for small discounts, suspectiously cheap prices are 99% pitfalls.
+
+### Fun Facts on Zhipu
+
+As a comparision, Zhipu won't ban you because you use their Coding Plan in Claude Code - actually they encourages you to do so.
+
+In fact the advertised SWE-bench scores on Zhipu official site are created by running GLM models in Claude Code - the industry acknowledged best coding agent.
 
 ## What's in here?
 
@@ -177,20 +198,64 @@ This will install:
 - Hooks symlinked to `~/.claude/hooks/` and registered in `settings.json`
 - Codex integration (if `~/.codex` exists)
 
-### Install Fish Integration (optional)
-If you are using `fish` shell, you may add this to your `~/.config/fish/config.fish` or whatever:
-```fish
-source /path/to/archibate-skills/intergration.fish
-```
-Where `/path/to/archibate-skills` is path to this project.
+### Install Archibate Claude Router
 
-This adds `commit` alias and the claude code router in this project as `claude` alias.
+The claude router lets you switch between model providers by prefixing your command with a route name (e.g. `./claude-router.py glm`, `./claude-router.py openrouter`) configured in [`router.json`](router.example.json).
 
 To configure the claude code router:
 ```bash
 cp router.example.json router.json
 ```
-Then edit `router.json` to fill your model providers and API keys.
+
+Then edit [`router.json`](router.example.json) to fill your model providers and API keys. Example:
+
+```json
+{
+    "default": {},
+    "glm": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_TOKEN_HERE",
+        "ANTHROPIC_API_KEY": "",
+        "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
+        "API_TIMEOUT_MS": "3000000",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.7",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.1"
+    },
+    "openrouter": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_TOKEN_HERE",
+        "ANTHROPIC_API_KEY": "",
+        "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+        "API_TIMEOUT_MS": "3000000",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "z-ai/glm-4.7",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "z-ai/glm-5",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "z-ai/glm-5.1"
+    }
+}
+```
+
+To make `claude` points to archibate claude router, add the appropriate line to your shell config:
+
+```bash
+# For bash (add to ~/.bashrc) or zsh (add to ~/.zshrc):
+source /path/to/archibate-skills/integration.sh
+
+# For fish (add to ~/.config/fish/config.fish):
+source /path/to/archibate-skills/integration.fish
+```
+
+Where `/path/to/archibate-skills` is the path to this project. This adds:
+- `claude` wrapper that routes through the claude router
+- `commit` alias for quick git commits via claude
+
+Running `./shell_integration_install.sh` will auto-detect your shell and offer to add the line.
+
+After that, you may invoke `claude glm` or `claude openrouter` to use the configured route at start up. When no argument specified, defaults to the `"default"` route (routes to official Claude in this example).
+
+- Other third-party alternatives: `ccr`, `cc-switch`
+
+No worry. It was tacitly approved to use alternative providers in Claude Code, not violates Anthropic Term of Services (Anthropic just want Claude Code popularity in community). Using `claude glm` and official `claude` at the same time will never be a cause of account ban. In AI agent community, many people use CC routers publicly.
 
 ### Configure MCP Servers
 
