@@ -83,12 +83,26 @@ Optional hooks (in `optional-hooks/`):
 ## Installation Steps
 
 ### Install Claude Code (if not yet)
-
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-> If you've already installed, make sure to run `claude update` to get latest version for new features.
+> If you've already installed, run `claude update` to get latest version.
+
+#### Switching Model Providers (optional)
+Official Claude models are expensive. Students may prefer cheaper domestic model providers. For example, to set up Zhipu's GLM:
+
+```bash
+export ANTHROPIC_AUTH_TOKEN=ZHIPU_API_KEY
+export ANTHROPIC_API_KEY=
+export ANTHROPIC_BASE_URL=https://open.bigmodel.cn/api/anthropic
+export API_TIMEOUT_MS=3000000
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.7
+export ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5
+export ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1
+```
+> replace `ZHIPU_API_KEY` by your Zhipu API key.
 
 ### Clone this Repo
 ```bash
@@ -274,6 +288,28 @@ Claude Code lives in terminal can't show images. The `cc-connect` skill allows a
 Alternatively, if you are in Kitty terminal, you may install the `show-image` skill in `optional-skills`. This skill is able to show image directly in Kitty terminal (thanks to the Kitty image protocol).
 
 ## Troubleshooting
+
+### Outputing Glitch on Long Conversation (when using Zhipu GLM-5)
+
+This is a known bug of GLM, not Claude Code.
+
+> I meet this in OpenCode frequently too. Only when using GLM models, never happens in GPT-Codex and Claude models. Some students reports this happens in Gemini too. Might be a problem with sparse attention - Claude and GPT are dense, while GLM/DeepSeek/Gemini are sparse attention.
+
+So GLM advertises 200k context (to match up with their Anthropic competitors), but they are actually only capable of ~128k context :)
+
+Above ~128k context, GLM have a high chance to fail into chaotic glitch response.
+
+To avoid this, trigger auto-compact eariler at `50%`:
+
+```bash
+export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=50
+```
+
+So that limits context max to 100k.
+
+However, this only reduces the 'chance' of glitch, but still are cases GLM glitchs at ~30% context, really annoying.
+
+Switch to expensive model providers (official Claude is best) to elimiate this.
 
 ### Claude Code Flickering
 Problem: Terminal keep flickering (blinking) when using Claude Code.
