@@ -98,6 +98,7 @@ Windows 用户建议用 WSL 或 SSH 远程服务器，体验会好很多。
 - `show-image` - 在 Kitty 终端中显示图片
 - `grill-me` - 实现前先面试用户关于计划的问题
 - `skillful` - 强制代理在对话前加载技能
+- `better-translate` - AI 驱动的英中翻译最佳实践
 
 #### [可选技能](optional-skills/)
 
@@ -488,11 +489,19 @@ nvim ~/.claude/settings.json  # 根据自己的需求编辑
 图形化 IDE：
 - Cursor
 - Kiro Code
-- Cline
 - Trae
 - Windsurf
 - Warp
 - Qoder
+
+IDE 插件：
+- Claude Code（VS Code 和 JetBrains）
+- OpenCode（VS Code）
+- Codex（VS Code）
+- Cline（VS Code）
+- Kilo Code（VS Code）
+- GitHub Copilot（VS Code）
+- CodeBuddy（VS Code）
 
 垃圾：
 - OpenFlaw
