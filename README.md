@@ -34,7 +34,7 @@ Just type "please install just for me" into Claude Code and it will install for 
 
 ### Rules
 
-Rule file: [`.claude/CLAUDE.md`](CLAUDE.md)
+Rule file: [`CLAUDE.md`](CLAUDE.md)
 
 - **Modern Alternatives** - Prefers `rg`, `fd`, `exa`, `sd`, `just`, `uv`, `pnpm` over legacy tools
 - **Agent CLI Tools** - `ast-grep`, `duckdb`, `mlr`, `jc`, `gron`, `pueue`, `gh`, `pdftotext`, `sqlite3`, `hyperfine`
