@@ -9,7 +9,6 @@
       "/tmp"
     ]
   },
-  "model": "opusplan",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -130,5 +129,6 @@
   "language": "English",
   "voiceEnabled": true,
   "autoMemoryEnabled": false,
-  "autoDreamEnabled": false
+  "autoDreamEnabled": false,
+  "effortLevel": "high"
 }
