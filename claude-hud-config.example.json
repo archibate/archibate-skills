@@ -1,0 +1,9 @@
+{
+  "lineLayout": "compact",
+  "showSeparators": false,
+  "display": {
+    "showTools": false,
+    "showAgents": false,
+    "showTodos": false
+  }
+}

@@ -150,6 +150,12 @@ These skills are **not installed by default**. Copy or symlink the ones you need
 
 Read [`settings.example.json`](settings.example.json) for my personal setup. You may update your `~/.claude/settings.json` accordingly if you find it make sense.
 
+To copy my settings as-is, you may run:
+```bash
+cp ~/.claude/settings.json ~/.claude/settings.json.bak
+cp settings.example.json ~/.claude/settings.json
+```
+
 ## Installation Steps
 
 ### Install Claude Code (if not yet)
@@ -349,6 +355,11 @@ After complete, you can disable that plugin to save context:
 /plugin disable claude-hud
 ```
 The plugin is just a bootstrapping tool. Once configured, claude-hud status line will continue to work without this plugin.
+
+To my claude-hud configuration as-is, you may run:
+```bash
+cp claude-hud-config.example.json ~/.claude/plugins/claude-hud/config.json
+```
 
 If you don't like claude-hud, you can also customize your own using Claude built-in `/statusline` command.
 
