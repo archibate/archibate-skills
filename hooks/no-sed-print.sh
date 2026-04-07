@@ -14,12 +14,13 @@ if echo "$command" | grep -qF 'BYPASS_SED_PRINT_CHECK'; then
     exit 0
 fi
 
-# Detect sed -n with numeric line printing (e.g., sed -n '12,13p' file)
-# Pattern: sed -n followed by a number or number range ending in p
+# Detect sed -n with numeric line printing on a file (e.g., sed -n '12,13p' file)
+# Pattern: sed -n followed by a number or number range ending in p, then a filename
 # We want to catch: '12p', "12p", 12p, '12,13p', "12,13!p", etc.
 # We do NOT want to catch: 's/foo/bar/p' (substitution), '/pattern/p' (regex)
-if echo "$command" | grep -qP '\bsed\s+-n\s+['"'"'"]?\d+[,.!]\d*p['"'"'"]?\b' ||
-    echo "$command" | grep -qP '\bsed\s+-n\s+['"'"'"]?\d+p['"'"'"]?\b'; then
+# Only match sed at command position (start of line or after && ; ||), not inside strings
+if echo "$command" | grep -qP '(^|&&|;|\|\|)\s*sed\s+-n\s+['"'"'"]?\d+[,.!]\d*p['"'"'"]?\s+[^\s|;&>]' ||
+   echo "$command" | grep -qP '(^|&&|;|\|\|)\s*sed\s+-n\s+['"'"'"]?\d+p['"'"'"]?\s+[^\s|;&>]'; then
 
     # Extract the line numbers for helpful suggestion
     range=$(echo "$command" | grep -oP '\bsed\s+-n\s+\K['"'"'"]?\d+(?:[,.!]\d+)?p['"'"'"]?' | head -1 | tr -d "'\"" || true)

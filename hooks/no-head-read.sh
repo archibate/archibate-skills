@@ -14,9 +14,10 @@ if echo "$command" | grep -qF 'BYPASS_HEAD_READ_CHECK'; then
     exit 0
 fi
 
-# Detect head with line count: head -N file, head -n N file, head --lines=N file
+# Detect head with line count reading a file: head -N file, head -n N file, head --lines=N file
 # Patterns: head -80, head -n 80, head --lines=80, head -n80
-if echo "$command" | grep -qP '\bhead\s+(-\d+|-n\s*\d+|--lines[= ]\d+)\b'; then
+# Only match head at command position (start of line or after && ; ||), not inside strings
+if echo "$command" | grep -qP '(^|&&|;|\|\|)\s*head\s+(-\d+|-n\s*\d+|--lines[= ]\d+)\s+[^\s|;&>]'; then
 
     # Extract line count
     limit=$(echo "$command" | grep -oP '\bhead\s+\K(-\d+|-n\s*\d+|--lines[= ]\d+)' | head -1 | grep -oP '\d+' || true)

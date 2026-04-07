@@ -6,12 +6,13 @@ command=$(jq -r '.tool_input.command // ""' <<< "$input")
 
 # Detect cat with heredoc AND file redirection
 # Pattern: cat << EOF > file, cat > file << EOF, cat << EOF | tee file
-if ! echo "$command" | grep -qE '\bcat\b.*<<'; then
+# Only match cat at command position (start of line or after && ; ||), not inside strings
+if ! echo "$command" | grep -qP '(^|&&|;|\|\|)\s*cat\b.*<<'; then
     exit 0
 fi
 
-# Check for file output redirection (>, >>, or | tee)
-if ! echo "$command" | grep -qE '(>\s*\S|>>\s*\S|\|\s*tee\b)'; then
+# Check for file output redirection (>, >>, or | tee) on the same line as cat
+if ! echo "$command" | grep -qP '(^|&&|;|\|\|)\s*cat\b.*(>\s*\S|>>\s*\S|\|\s*tee\b)'; then
     exit 0  # No file output, allow
 fi
 
