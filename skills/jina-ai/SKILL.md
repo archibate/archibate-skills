@@ -11,18 +11,10 @@ Call Jina MCP tools via `mcpcall` (Bash) for web content extraction, search, aca
 
 ## Setup
 
-If mcpcall reports `server 'jina' not found`, add it to `~/.config/mcpcall/servers.json` (requires a [Jina API key](https://jina.ai/api-key)):
+If mcpcall reports `server 'jina' not found`, add it (requires a [Jina API key](https://jina.ai/api-key)):
 
 ```bash
-mkdir -p ~/.config/mcpcall
-cat > ~/.config/mcpcall/servers.json <<'EOF'
-{
-  "jina": {
-    "url": "https://mcp.jina.ai/v1",
-    "headers": { "Authorization": "Bearer <JINA_API_KEY>" }
-  }
-}
-EOF
+$MCPCALL --add jina --url https://mcp.jina.ai/v1 --header "Authorization=Bearer <JINA_API_KEY>"
 ```
 
 **Command shorthand** used throughout this doc:

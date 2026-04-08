@@ -10,13 +10,15 @@ Usage:
     mcpcall jina.search_web query:"search terms" num:10
     mcpcall jina.classify_text --args '{"texts":["a","b"],"labels":["x","y"]}'
     mcpcall --list jina
+    mcpcall --add myserver --url https://mcp.example.com/v1
+    mcpcall --add myserver --url https://mcp.example.com/v1 --header Authorization="Bearer key"
 
-Reads server config from ~/.claude.json mcpServers entries.
+Reads server config from ~/.config/mcpcall/servers.json (primary),
+falls back to ~/.claude.json mcpServers.
 Respects http_proxy/https_proxy (via httpx).
 """
 import argparse
 import json
-import os
 import sys
 from functools import partial
 from pathlib import Path
@@ -27,12 +29,34 @@ from mcp.client.session import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
 
 
+CFG_PATH = Path.home() / ".config" / "mcpcall" / "servers.json"
+
+
+def add_server(name: str, url: str, headers: list[str]):
+    CFG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    servers: dict = {}
+    if CFG_PATH.exists():
+        servers = json.loads(CFG_PATH.read_text())
+    entry: dict = {"url": url}
+    if headers:
+        hdr = {}
+        for h in headers:
+            if "=" not in h:
+                print(f"error: bad header '{h}', expected Key=Value", file=sys.stderr)
+                sys.exit(1)
+            k, v = h.split("=", 1)
+            hdr[k] = v
+        entry["headers"] = hdr
+    servers[name] = entry
+    CFG_PATH.write_text(json.dumps(servers, indent=2) + "\n")
+    print(f"added '{name}' -> {url}")
+
+
 def load_server_config(server_name: str) -> tuple[str, dict[str, str]]:
     servers: dict = {}
     # Primary: ~/.config/mcpcall/servers.json
-    mcpcall_cfg = Path.home() / ".config" / "mcpcall" / "servers.json"
-    if mcpcall_cfg.exists():
-        servers = json.loads(mcpcall_cfg.read_text())
+    if CFG_PATH.exists():
+        servers = json.loads(CFG_PATH.read_text())
     # Fallback: ~/.claude.json mcpServers
     if server_name not in servers:
         claude_json = Path.home() / ".claude.json"
@@ -40,10 +64,11 @@ def load_server_config(server_name: str) -> tuple[str, dict[str, str]]:
             cfg = json.loads(claude_json.read_text())
             servers.update(cfg.get("mcpServers", {}))
     if server_name not in servers:
-        cfg_path = mcpcall_cfg
         available = ", ".join(servers.keys()) or "(none)"
         print(f"error: server '{server_name}' not found. available: {available}", file=sys.stderr)
-        print(f"\nTo add it, edit {cfg_path} and add:", file=sys.stderr)
+        print(f"\nTo add it, run:", file=sys.stderr)
+        print(f"  mcpcall --add {server_name} --url https://mcp.example.com/v1", file=sys.stderr)
+        print(f"\nOr edit {CFG_PATH} and add:", file=sys.stderr)
         print(f'  "{server_name}": {{"url": "https://mcp.example.com/v1"}}', file=sys.stderr)
         sys.exit(1)
     s = servers[server_name]
@@ -101,11 +126,25 @@ async def list_tools(url: str, headers: dict):
 
 def main():
     parser = argparse.ArgumentParser(description="Call MCP server tools")
-    parser.add_argument("target", help="server.tool (e.g. jina.primer) or just server with --list")
+    parser.add_argument("target", nargs="?", help="server.tool (e.g. jina.primer) or just server with --list")
     parser.add_argument("kv_args", nargs="*", help="key:value arguments")
     parser.add_argument("--args", dest="json_args", help="JSON arguments string")
     parser.add_argument("--list", action="store_true", help="List available tools")
+    parser.add_argument("--add", metavar="NAME", help="Add a server to config")
+    parser.add_argument("--url", help="Server URL (used with --add)")
+    parser.add_argument("--header", action="append", default=[], help="Header Key=Value (used with --add, repeatable)")
     args = parser.parse_args()
+
+    if args.add:
+        if not args.url:
+            print("error: --url is required with --add", file=sys.stderr)
+            sys.exit(1)
+        add_server(args.add, args.url, args.header)
+        return
+
+    if not args.target:
+        parser.print_help()
+        sys.exit(1)
 
     if args.list:
         server_name = args.target

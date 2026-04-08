@@ -4,17 +4,14 @@ Guide for wrapping any MCP server as a Claude Code skill backed by the `mcpcall`
 
 ## Prerequisites
 
-1. The MCP server is registered in `~/.config/mcpcall/servers.json` (or `~/.claude.json` mcpServers as fallback):
+1. The MCP server is registered via `mcpcall --add`:
 
-```json
-{
-  "myserver": {
-    "type": "http",
-    "url": "https://mcp.example.com/v1",
-    "headers": { "Authorization": "Bearer <key>" }
-  }
-}
+```bash
+mcpcall --add myserver --url https://mcp.example.com/v1
+mcpcall --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <key>"
 ```
+
+This writes to `~/.config/mcpcall/servers.json`. mcpcall also falls back to `~/.claude.json` mcpServers.
 
 2. The `mcpcall` skill exists as a sibling skill (provides `scripts/mcpcall.py`).
 
@@ -64,18 +61,10 @@ Call MyServer MCP tools via `mcpcall` for <purpose>.
 
 ## Setup
 
-If mcpcall reports `server 'myserver' not found`, add it to `~/.config/mcpcall/servers.json`:
+If mcpcall reports `server 'myserver' not found`, add it:
 
 ```bash
-mkdir -p ~/.config/mcpcall
-cat > ~/.config/mcpcall/servers.json <<'EOF'
-{
-  "myserver": {
-    "url": "https://mcp.example.com/v1",
-    "headers": { "Authorization": "Bearer <API_KEY>" }
-  }
-}
-EOF
+$MCPCALL --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <API_KEY>"
 ```
 
 **Command shorthand** used throughout this doc:
@@ -157,17 +146,10 @@ allowed-tools:
 
 ## Setup
 
-If mcpcall reports `server 'weather' not found`, add it to `~/.config/mcpcall/servers.json`:
+If mcpcall reports `server 'weather' not found`, add it:
 
 ```bash
-mkdir -p ~/.config/mcpcall
-cat > ~/.config/mcpcall/servers.json <<'EOF'
-{
-  "weather": {
-    "url": "https://mcp.weather.example.com/v1"
-  }
-}
-EOF
+$MCPCALL --add weather --url https://mcp.weather.example.com/v1
 ```
 
 **Command shorthand:**

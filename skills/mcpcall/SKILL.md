@@ -29,22 +29,22 @@ uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --list jina
 
 Reads from `~/.config/mcpcall/servers.json` (primary), falls back to `~/.claude.json` mcpServers.
 
-If a server is not configured, mcpcall prints the missing server name and a hint to add it. Each MCP skill's Setup section documents the exact entry to add.
+If a server is not configured, mcpcall prints the missing server name and a hint to add it.
 
-To add a new server:
+### Add a server
 
 ```bash
-mkdir -p ~/.config/mcpcall
-# Edit ~/.config/mcpcall/servers.json and add:
-{
-  "myserver": {
-    "url": "https://mcp.example.com/v1",
-    "headers": { "Authorization": "Bearer <key>" }
-  }
-}
+# No auth required
+$MCPCALL --add myserver --url https://mcp.example.com/v1
+
+# With auth header
+$MCPCALL --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <key>"
+
+# Multiple headers
+$MCPCALL --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <key>" --header "X-Custom=value"
 ```
 
-`headers` is optional — omit it for servers that don't require authentication.
+Where `$MCPCALL` is `uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py`.
 
 ## Why not mcporter?
 

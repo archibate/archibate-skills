@@ -11,17 +11,10 @@ Search real-world code examples from over a million public GitHub repositories. 
 
 ## Setup
 
-If mcpcall reports `server 'grep' not found`, add it to `~/.config/mcpcall/servers.json` (no API key required):
+If mcpcall reports `server 'grep' not found`, add it (no API key required):
 
 ```bash
-mkdir -p ~/.config/mcpcall
-cat > ~/.config/mcpcall/servers.json <<'EOF'
-{
-  "grep": {
-    "url": "https://mcp.grep.app"
-  }
-}
-EOF
+$MCPCALL --add grep --url https://mcp.grep.app
 ```
 
 **Command shorthand** used throughout this doc:
