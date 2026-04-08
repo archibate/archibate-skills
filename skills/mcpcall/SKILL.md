@@ -1,53 +1,42 @@
 ---
-name: mcpcall
-description: Call MCP server tools from the command line via Python. TRIGGER when need to call MCP tools via Bash, or when mcporter fails due to proxy/network issues. Provides a proxy-aware alternative to mcporter using httpx + Streamable HTTP transport.
-allowed-tools:
-  - Bash(uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py*:*)
+name: mcp-to-skill
+description: Guide and template for converting MCP servers into self-contained Claude Code skills with a Python wrapper script. TRIGGER when creating a new MCP skill, wrapping an MCP server as a skill, or need the mcpcall script template.
 ---
 
-# mcpcall
+# MCP-to-Skill Template
 
-Call MCP server tools from the CLI. A proxy-aware Python alternative to `npx mcporter call`.
+Guide for converting any MCP server into a self-contained Claude Code skill with a Python wrapper in `scripts/mcpcall.py`.
 
-Uses `httpx` (respects `http_proxy`/`https_proxy`) and MCP Streamable HTTP transport. Zero pre-installation via PEP 723 inline metadata — `uv` resolves dependencies on first run.
+Each MCP skill bundles its own `scripts/mcpcall.py` with the server URL baked in. No shared dependency, no cross-skill references — fully portable.
 
-## Usage
+## Architecture
 
-```bash
-# Call a tool with key:value args
-uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py jina.primer
-uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py jina.search_web query:"search terms" num:10
-
-# Call a tool with JSON args (for arrays/objects)
-uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py jina.classify_text --args '{"texts": ["a", "b"], "labels": ["x", "y"]}'
-
-# List all tools on a server
-uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --list jina
+```
+skills/my-mcp-skill/
+├── SKILL.md              # frontmatter + tool docs
+└── scripts/
+    └── mcpcall.py        # self-contained PEP 723 script with server URL
 ```
 
-## Server Config
+The script uses `httpx` (respects `http_proxy`/`https_proxy`) and MCP Streamable HTTP transport. Dependencies are resolved by `uv` on first run via PEP 723 inline metadata — zero pre-installation.
 
-Reads from `~/.config/mcpcall/servers.json` (primary), falls back to `~/.claude.json` mcpServers.
+## Quick Start
 
-If a server is not configured, mcpcall prints the missing server name and a hint to add it.
+1. Copy the appropriate template from `references/` into `skills/my-skill/scripts/mcpcall.py`
+2. Edit `SERVER_URL` (and `SERVER_NAME`, `NEEDS_AUTH` if applicable)
+3. Write `SKILL.md` with tool docs (see `references/mcp-to-skill.md`)
 
-### Add a server
+## Templates
 
-```bash
-# No auth required
-$MCPCALL --add myserver --url https://mcp.example.com/v1
+Two variants in `references/`:
 
-# With auth header
-$MCPCALL --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <key>"
+- **`template-noauth.py`** — for servers without authentication (grep.app, DeepWiki)
+- **`template-auth.py`** — for servers requiring API keys (Jina AI), includes `--setup` and config reading
 
-# Multiple headers
-$MCPCALL --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <key>" --header "X-Custom=value"
-```
+## Live Examples
 
-Where `$MCPCALL` is `uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py`.
-
-## Why not mcporter?
-
-- Node.js `fetch`/`eventsource` ignores `http_proxy`/`https_proxy` env vars
-- mcporter uses legacy SSE transport; many MCP servers now use Streamable HTTP
-- `httpx` in Python respects proxy settings out of the box
+| Skill | Server | Auth | Script |
+|---|---|---|---|
+| `jina-ai` | mcp.jina.ai | API key | `template-auth.py` variant |
+| `grep-app` | mcp.grep.app | None | `template-noauth.py` variant |
+| `deepwiki` | mcp.deepwiki.com | None | `template-noauth.py` variant |

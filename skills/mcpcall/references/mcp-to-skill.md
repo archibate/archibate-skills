@@ -1,38 +1,45 @@
-# Converting an MCP Server into a Skill with mcpcall
+# Converting an MCP Server into a Skill
 
-Guide for wrapping any MCP server as a Claude Code skill backed by the `mcpcall` CLI.
+Guide for wrapping any MCP server as a self-contained Claude Code skill.
 
-## Prerequisites
-
-1. The MCP server is registered via `mcpcall --add`:
-
-```bash
-mcpcall --add myserver --url https://mcp.example.com/v1
-mcpcall --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <key>"
-```
-
-This writes to `~/.config/mcpcall/servers.json`. mcpcall also falls back to `~/.claude.json` mcpServers.
-
-2. The `mcpcall` skill exists as a sibling skill (provides `scripts/mcpcall.py`).
-
-## Step 1: Discover Tools
-
-List all tools the server exposes:
-
-```bash
-uv run --script path/to/mcpcall/scripts/mcpcall.py --list myserver
-```
-
-This prints each tool name and a short description. Use this to decide which tools to document.
-
-## Step 2: Create the Skill Directory
+## Step 1: Create Skill Directory
 
 ```
 skills/my-mcp-skill/
-└── SKILL.md
+├── SKILL.md
+└── scripts/
+    └── mcpcall.py    # copy from template
 ```
 
-## Step 3: Write SKILL.md
+## Step 2: Copy the Script Template
+
+Pick the right template from this directory:
+
+- **No auth needed** → copy `template-noauth.py`
+- **API key required** → copy `template-auth.py`
+
+Edit the constants at the top:
+
+```python
+# template-noauth.py
+SERVER_URL = "https://mcp.example.com/v1"
+
+# template-auth.py
+SERVER_NAME = "myserver"
+SERVER_URL = "https://mcp.example.com/v1"
+SETUP_PROMPT = "Enter API key"
+SETUP_URL = "https://example.com/api-keys"
+```
+
+Make it executable: `chmod +x scripts/mcpcall.py`
+
+## Step 3: Discover Tools
+
+```bash
+uv run --script scripts/mcpcall.py --list
+```
+
+## Step 4: Write SKILL.md
 
 ### Frontmatter
 
@@ -41,141 +48,60 @@ skills/my-mcp-skill/
 name: my-mcp-skill
 description: <what it does>. TRIGGER when <when to activate>.
 allowed-tools:
-  - Bash(uv run --script*mcpcall.py myserver.*:*)
+  - Bash(uv run --script*mcpcall.py *:*)
 ---
 ````
 
-Key points:
-- `name` — kebab-case, matches directory name.
-- `description` — concise sentence on capability + explicit TRIGGER clause so Claude loads the skill at the right time.
-- `allowed-tools` — glob pattern that auto-approves `mcpcall` invocations scoped to this server. The `*` between `--script` and `mcpcall.py` absorbs the path prefix.
-
 ### Body
-
-Start with a Setup section that tells the user how to configure the server if mcpcall reports it missing. Then define a `MCPCALL` shorthand and document each tool.
 
 ````markdown
 # My MCP Skill
 
-Call MyServer MCP tools via `mcpcall` for <purpose>.
+<one-line description>. No API key required.
 
-## Setup
-
-If mcpcall reports `server 'myserver' not found`, add it:
+**Command shorthand:**
 
 ```bash
-$MCPCALL --add myserver --url https://mcp.example.com/v1 --header "Authorization=Bearer <API_KEY>"
+MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py"
 ```
 
-**Command shorthand** used throughout this doc:
+## Setup (auth variant only)
+
+If mcpcall reports authentication error, run:
 
 ```bash
-MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/../mcpcall/scripts/mcpcall.py"
+$MCPCALL --setup
 ```
 
 ## tool_name
-<one-line description>
-- `param1` (required): <description>
-- `param2`: <description> (default: `value`)
+<description>
+- `param` (required): <what it is>
 
 ```bash
-$MCPCALL myserver.tool_name param1:"value" param2:10
+$MCPCALL tool_name param:"value"
 ```
 ````
 
 ### Argument Styles
 
-mcpcall supports two argument styles:
-
-**Key-value** — for flat parameters (strings, numbers, booleans):
+**Key-value** — flat parameters:
 
 ```bash
-$MCPCALL myserver.search query:"search terms" num:10 verbose:true
+$MCPCALL search query:"search terms" num:10 verbose:true
 ```
 
-Type coercion: `true`/`false` → bool, integers → int, floats → float, else string.
-
-**JSON** — for nested objects or arrays:
+**JSON** — arrays or objects:
 
 ```bash
-$MCPCALL myserver.classify --args '{"texts": ["a", "b"], "labels": ["x", "y"]}'
+$MCPCALL classify --args '{"texts": ["a", "b"], "labels": ["x", "y"]}'
 ```
 
-Use `--args` whenever a parameter is an array or object.
+Both can be combined — kv_args as base, `--args` JSON merged on top.
 
-## Step 4: Add a Tool Selection Guide (optional)
+## Live Examples
 
-For servers with many tools, add a table mapping scenarios to tool names:
-
-````markdown
-## Tool Selection Guide
-
-| Scenario | Tool |
-|---|---|
-| Single page read | `read_url` |
-| Batch page read | `parallel_read_url` |
-| General search | `search_web` |
-````
-
-## Step 5: Add Tips Section (optional)
-
-Include domain-specific tips for effective usage:
-
-````markdown
-## Tips
-
-- Use `expand_query` before `parallel_search` for thorough research.
-- Set `tbs:qdr:w` to restrict results to the past week.
-````
-
-## Complete Minimal Example
-
-A minimal skill wrapping a hypothetical `weather` MCP server:
-
-````yaml
----
-name: weather
-description: Get weather forecasts and conditions via MCP. TRIGGER when user asks about weather, forecasts, or climate data.
-allowed-tools:
-  - Bash(uv run --script*mcpcall.py weather.*:*)
----
-````
-
-````markdown
-# Weather
-
-## Setup
-
-If mcpcall reports `server 'weather' not found`, add it:
-
-```bash
-$MCPCALL --add weather --url https://mcp.weather.example.com/v1
-```
-
-**Command shorthand:**
-
-```bash
-MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/../mcpcall/scripts/mcpcall.py"
-```
-
-## current
-Get current weather for a location.
-- `location` (required): city name or coordinates
-
-```bash
-$MCPCALL weather.current location:"Tokyo"
-```
-
-## forecast
-Get multi-day forecast.
-- `location` (required): city name or coordinates
-- `days`: number of days (default: 5)
-
-```bash
-$MCPCALL weather.forecast location:"Shanghai" days:7
-```
-````
-
-## Reference: jina-ai Skill
-
-The `jina-ai` skill (`skills/jina-ai/SKILL.md`) is a full production example covering 20+ tools across web reading, search, academic research, NLP, and screenshots. Use it as the canonical template.
+| Skill | Template | Server |
+|---|---|---|
+| `jina-ai` | auth | `https://mcp.jina.ai/v1` |
+| `grep-app` | noauth | `https://mcp.grep.app` |
+| `deepwiki` | noauth | `https://mcp.deepwiki.com/mcp` |

@@ -2,25 +2,17 @@
 name: grep-app
 description: Search real-world code examples from over a million public GitHub repositories via grep.app MCP. TRIGGER when need to find code usage patterns, see how developers use a library/API in practice, find production examples of a specific function or syntax, or search GitHub code at scale.
 allowed-tools:
-  - Bash(uv run --script*mcpcall.py grep.*:*)
+  - Bash(uv run --script*mcpcall.py *:*)
 ---
 
 # grep.app
 
-Search real-world code examples from over a million public GitHub repositories. Powered by [grep.app](https://grep.app) MCP.
-
-## Setup
-
-If mcpcall reports `server 'grep' not found`, add it (no API key required):
-
-```bash
-$MCPCALL --add grep --url https://mcp.grep.app
-```
+Search real-world code examples from over a million public GitHub repositories. Powered by [grep.app](https://grep.app) MCP. No API key required.
 
 **Command shorthand** used throughout this doc:
 
 ```bash
-MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/../mcpcall/scripts/mcpcall.py"
+MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py"
 ```
 
 ## searchGitHub
@@ -38,23 +30,23 @@ Find real-world code examples by searching for **literal code patterns** (like g
 ### Basic usage
 
 ```bash
-$MCPCALL grep.searchGitHub query:"useState("
-$MCPCALL grep.searchGitHub query:"getServerSession" --args '{"language": ["TypeScript", "TSX"]}'
-$MCPCALL grep.searchGitHub query:"CORS(" matchCase:true --args '{"language": ["Python"]}'
+$MCPCALL searchGitHub query:"useState("
+$MCPCALL searchGitHub query:"getServerSession" --args '{"language": ["TypeScript", "TSX"]}'
+$MCPCALL searchGitHub query:"CORS(" matchCase:true --args '{"language": ["Python"]}'
 ```
 
 ### Filter by repo or path
 
 ```bash
-$MCPCALL grep.searchGitHub query:"createContext" repo:"facebook/react"
-$MCPCALL grep.searchGitHub query:"export default" path:"/route.ts" --args '{"language": ["TypeScript"]}'
+$MCPCALL searchGitHub query:"createContext" repo:"facebook/react"
+$MCPCALL searchGitHub query:"export default" path:"/route.ts" --args '{"language": ["TypeScript"]}'
 ```
 
 ### Regex patterns
 
 ```bash
-$MCPCALL grep.searchGitHub query:"(?s)useEffect\\(\\(\\) => \\{.*removeEventListener" useRegexp:true
-$MCPCALL grep.searchGitHub query:"(?s)try \\{.*await" useRegexp:true --args '{"language": ["TypeScript"]}'
+$MCPCALL searchGitHub query:"(?s)useEffect\\(\\(\\) => \\{.*removeEventListener" useRegexp:true
+$MCPCALL searchGitHub query:"(?s)try \\{.*await" useRegexp:true --args '{"language": ["TypeScript"]}'
 ```
 
 ## Tips
