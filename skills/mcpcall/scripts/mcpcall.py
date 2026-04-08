@@ -28,12 +28,17 @@ from mcp.client.streamable_http import streamablehttp_client
 
 
 def load_server_config(server_name: str) -> tuple[str, dict[str, str]]:
-    claude_json = Path.home() / ".claude.json"
-    if not claude_json.exists():
-        print(f"error: ~/.claude.json not found", file=sys.stderr)
-        sys.exit(1)
-    cfg = json.loads(claude_json.read_text())
-    servers = cfg.get("mcpServers", {})
+    servers: dict = {}
+    # Primary: ~/.config/mcpcall/servers.json
+    mcpcall_cfg = Path.home() / ".config" / "mcpcall" / "servers.json"
+    if mcpcall_cfg.exists():
+        servers = json.loads(mcpcall_cfg.read_text())
+    # Fallback: ~/.claude.json mcpServers
+    if server_name not in servers:
+        claude_json = Path.home() / ".claude.json"
+        if claude_json.exists():
+            cfg = json.loads(claude_json.read_text())
+            servers.update(cfg.get("mcpServers", {}))
     if server_name not in servers:
         available = ", ".join(servers.keys()) or "(none)"
         print(f"error: server '{server_name}' not found. available: {available}", file=sys.stderr)

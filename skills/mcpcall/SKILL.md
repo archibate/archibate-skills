@@ -27,16 +27,14 @@ uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --list jina
 
 ## Server Config
 
-Reads `mcpServers` from `~/.claude.json`. Example entry:
+Reads from `~/.config/mcpcall/servers.json` (primary), falls back to `~/.claude.json` mcpServers.
 
 ```json
 {
-  "mcpServers": {
-    "jina": {
-      "type": "http",
-      "url": "https://mcp.jina.ai/v1",
-      "headers": { "Authorization": "Bearer <key>" }
-    }
+  "jina": {
+    "type": "http",
+    "url": "https://mcp.jina.ai/v1",
+    "headers": { "Authorization": "Bearer <key>" }
   }
 }
 ```

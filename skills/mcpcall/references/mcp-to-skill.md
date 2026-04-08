@@ -4,16 +4,14 @@ Guide for wrapping any MCP server as a Claude Code skill backed by the `mcpcall`
 
 ## Prerequisites
 
-1. The MCP server is registered in `~/.claude.json` under `mcpServers`:
+1. The MCP server is registered in `~/.config/mcpcall/servers.json` (or `~/.claude.json` mcpServers as fallback):
 
 ```json
 {
-  "mcpServers": {
-    "myserver": {
-      "type": "http",
-      "url": "https://mcp.example.com/v1",
-      "headers": { "Authorization": "Bearer <key>" }
-    }
+  "myserver": {
+    "type": "http",
+    "url": "https://mcp.example.com/v1",
+    "headers": { "Authorization": "Bearer <key>" }
   }
 }
 ```
