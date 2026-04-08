@@ -11,7 +11,7 @@ Each MCP skill bundles its own `scripts/mcpcall.py` with the server URL baked in
 
 ## Quick Start
 
-1. Create `skills/my-mcp-skill/scripts/`
+1. Create skill directory with `scripts/` subfolder
 2. Copy the appropriate template into `scripts/mcpcall.py`:
    - **No auth needed** → `references/template-noauth.py`
    - **API key required** → `references/template-auth.py`
@@ -110,7 +110,7 @@ Both can be combined — kv_args as base, `--args` JSON merged on top.
 ## Skill Directory Layout
 
 ```
-skills/my-mcp-skill/
+my-mcp-skill/
 ├── SKILL.md              # frontmatter + tool docs
 └── scripts/
     └── mcpcall.py        # self-contained PEP 723 script
