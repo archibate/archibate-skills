@@ -9,7 +9,7 @@ allowed-tools:
 
 Call MCP server tools from the CLI. A proxy-aware Python alternative to `npx mcporter call`.
 
-Uses `httpx` (respects `http_proxy`/`https_proxy`) and MCP Streamable HTTP transport. Reads server config from `~/.claude.json` mcpServers entries. Zero pre-installation via PEP 723 inline metadata — `uv` resolves dependencies on first run.
+Uses `httpx` (respects `http_proxy`/`https_proxy`) and MCP Streamable HTTP transport. Zero pre-installation via PEP 723 inline metadata — `uv` resolves dependencies on first run.
 
 ## Usage
 
@@ -29,15 +29,22 @@ uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --list jina
 
 Reads from `~/.config/mcpcall/servers.json` (primary), falls back to `~/.claude.json` mcpServers.
 
-```json
+If a server is not configured, mcpcall prints the missing server name and a hint to add it. Each MCP skill's Setup section documents the exact entry to add.
+
+To add a new server:
+
+```bash
+mkdir -p ~/.config/mcpcall
+# Edit ~/.config/mcpcall/servers.json and add:
 {
-  "jina": {
-    "type": "http",
-    "url": "https://mcp.jina.ai/v1",
+  "myserver": {
+    "url": "https://mcp.example.com/v1",
     "headers": { "Authorization": "Bearer <key>" }
   }
 }
 ```
+
+`headers` is optional — omit it for servers that don't require authentication.
 
 ## Why not mcporter?
 

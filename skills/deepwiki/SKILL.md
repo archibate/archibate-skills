@@ -11,14 +11,17 @@ AI-powered documentation for GitHub repositories. Browse auto-generated docs, ex
 
 ## Setup
 
-Ensure `deepwiki` is in `~/.config/mcpcall/servers.json` (no API key required):
+If mcpcall reports `server 'deepwiki' not found`, add it to `~/.config/mcpcall/servers.json` (no API key required):
 
-```json
+```bash
+mkdir -p ~/.config/mcpcall
+cat > ~/.config/mcpcall/servers.json <<'EOF'
 {
   "deepwiki": {
     "url": "https://mcp.deepwiki.com/mcp"
   }
 }
+EOF
 ```
 
 **Command shorthand** used throughout this doc:

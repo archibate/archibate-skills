@@ -40,8 +40,11 @@ def load_server_config(server_name: str) -> tuple[str, dict[str, str]]:
             cfg = json.loads(claude_json.read_text())
             servers.update(cfg.get("mcpServers", {}))
     if server_name not in servers:
+        cfg_path = mcpcall_cfg
         available = ", ".join(servers.keys()) or "(none)"
         print(f"error: server '{server_name}' not found. available: {available}", file=sys.stderr)
+        print(f"\nTo add it, edit {cfg_path} and add:", file=sys.stderr)
+        print(f'  "{server_name}": {{"url": "https://mcp.example.com/v1"}}', file=sys.stderr)
         sys.exit(1)
     s = servers[server_name]
     return s["url"], s.get("headers", {})

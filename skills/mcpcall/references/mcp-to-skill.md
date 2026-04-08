@@ -55,12 +55,28 @@ Key points:
 
 ### Body
 
-Define a `MCPCALL` shorthand at the top, then document each tool with parameters and a bash example.
+Start with a Setup section that tells the user how to configure the server if mcpcall reports it missing. Then define a `MCPCALL` shorthand and document each tool.
 
 ````markdown
 # My MCP Skill
 
 Call MyServer MCP tools via `mcpcall` for <purpose>.
+
+## Setup
+
+If mcpcall reports `server 'myserver' not found`, add it to `~/.config/mcpcall/servers.json`:
+
+```bash
+mkdir -p ~/.config/mcpcall
+cat > ~/.config/mcpcall/servers.json <<'EOF'
+{
+  "myserver": {
+    "url": "https://mcp.example.com/v1",
+    "headers": { "Authorization": "Bearer <API_KEY>" }
+  }
+}
+EOF
+```
 
 **Command shorthand** used throughout this doc:
 
@@ -138,6 +154,21 @@ allowed-tools:
 
 ````markdown
 # Weather
+
+## Setup
+
+If mcpcall reports `server 'weather' not found`, add it to `~/.config/mcpcall/servers.json`:
+
+```bash
+mkdir -p ~/.config/mcpcall
+cat > ~/.config/mcpcall/servers.json <<'EOF'
+{
+  "weather": {
+    "url": "https://mcp.weather.example.com/v1"
+  }
+}
+EOF
+```
 
 **Command shorthand:**
 
