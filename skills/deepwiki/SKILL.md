@@ -9,6 +9,18 @@ allowed-tools:
 
 AI-powered documentation for GitHub repositories. Browse auto-generated docs, explore topic structures, and ask questions about any public repo. Powered by [DeepWiki](https://deepwiki.com) MCP.
 
+## Setup
+
+Ensure `deepwiki` is in `~/.config/mcpcall/servers.json` (no API key required):
+
+```json
+{
+  "deepwiki": {
+    "url": "https://mcp.deepwiki.com/mcp"
+  }
+}
+```
+
 **Command shorthand** used throughout this doc:
 
 ```bash

@@ -9,6 +9,18 @@ allowed-tools:
 
 Search real-world code examples from over a million public GitHub repositories. Powered by [grep.app](https://grep.app) MCP.
 
+## Setup
+
+Ensure `grep` is in `~/.config/mcpcall/servers.json` (no API key required):
+
+```json
+{
+  "grep": {
+    "url": "https://mcp.grep.app"
+  }
+}
+```
+
 **Command shorthand** used throughout this doc:
 
 ```bash

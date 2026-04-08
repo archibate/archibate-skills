@@ -9,7 +9,18 @@ allowed-tools:
 
 Call Jina MCP tools via `mcpcall` (Bash) for web content extraction, search, academic research, embeddings-based NLP, and visual capture.
 
-**MCP Server URL**: `https://mcp.jina.ai/v1`
+## Setup
+
+Ensure `jina` is in `~/.config/mcpcall/servers.json` (requires a [Jina API key](https://jina.ai/api-key)):
+
+```json
+{
+  "jina": {
+    "url": "https://mcp.jina.ai/v1",
+    "headers": { "Authorization": "Bearer <JINA_API_KEY>" }
+  }
+}
+```
 
 **Command shorthand** used throughout this doc:
 
