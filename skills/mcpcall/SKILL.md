@@ -9,15 +9,18 @@ Convert any MCP server into a self-contained Claude Code skill with a Python wra
 
 Each MCP skill bundles its own `scripts/mcpcall.py` with the server URL baked in. No shared dependency, no cross-skill references — fully portable. Uses `httpx` (respects `http_proxy`/`https_proxy`) and MCP Streamable HTTP transport. Dependencies resolved by `uv` on first run via PEP 723 inline metadata.
 
+The script is executable (`chmod +x`) with a `#!/usr/bin/env -S uv run --script` shebang, so it can be called directly without any prefix.
+
 ## Quick Start
 
 1. Create skill directory with `scripts/` subfolder
 2. Copy the appropriate template into `scripts/mcpcall.py`:
    - **No auth needed** → `references/template-noauth.py`
    - **API key required** → `references/template-auth.py`
-3. Edit the constants at the top of the script
-4. Discover tools: `uv run --script scripts/mcpcall.py --list`
-5. Write `SKILL.md` with tool docs
+3. `chmod +x scripts/mcpcall.py`
+4. Edit the constants at the top of the script
+5. Discover tools: `scripts/mcpcall.py --list`
+6. Write `SKILL.md` with tool docs
 
 ## Step 1: Copy and Configure the Script
 
@@ -40,8 +43,6 @@ SETUP_PROMPT = "Enter API key"
 SETUP_URL = "https://example.com/api-keys"
 ```
 
-Make it executable: `chmod +x scripts/mcpcall.py`
-
 ## Step 2: Write SKILL.md
 
 ### Frontmatter
@@ -51,7 +52,7 @@ Make it executable: `chmod +x scripts/mcpcall.py`
 name: my-mcp-skill
 description: <what it does>. TRIGGER when <when to activate>.
 allowed-tools:
-  - Bash(uv run --script*mcpcall.py *:*)
+  - Bash(*mcpcall.py*:*)
 ---
 ````
 
@@ -66,18 +67,12 @@ allowed-tools:
 
 <one-line description>. No API key required.
 
-**Command shorthand:**
-
-```bash
-MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py"
-```
-
 ## Setup (auth variant only)
 
 If mcpcall reports authentication error, run:
 
 ```bash
-$MCPCALL --setup
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --setup
 ```
 
 ## tool_name
@@ -85,7 +80,7 @@ $MCPCALL --setup
 - `param` (required): <what it is>
 
 ```bash
-$MCPCALL tool_name param:"value"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py tool_name param:"value"
 ```
 ````
 
@@ -94,7 +89,7 @@ $MCPCALL tool_name param:"value"
 **Key-value** — flat parameters (strings, numbers, booleans):
 
 ```bash
-$MCPCALL search query:"search terms" num:10 verbose:true
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search query:"search terms" num:10 verbose:true
 ```
 
 Type coercion: `true`/`false` → bool, integers → int, floats → float, else string.
@@ -102,7 +97,7 @@ Type coercion: `true`/`false` → bool, integers → int, floats → float, else
 **JSON** — arrays or objects:
 
 ```bash
-$MCPCALL classify --args '{"texts": ["a", "b"], "labels": ["x", "y"]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py classify --args '{"texts": ["a", "b"], "labels": ["x", "y"]}'
 ```
 
 Both can be combined — kv_args as base, `--args` JSON merged on top.
@@ -113,7 +108,7 @@ Both can be combined — kv_args as base, `--args` JSON merged on top.
 my-mcp-skill/
 ├── SKILL.md              # frontmatter + tool docs
 └── scripts/
-    └── mcpcall.py        # self-contained PEP 723 script
+    └── mcpcall.py        # self-contained PEP 723 script (chmod +x)
 ```
 
 ## Live Examples

@@ -2,18 +2,12 @@
 name: deepwiki
 description: AI-powered documentation for GitHub repositories via DeepWiki MCP. TRIGGER when need to understand a GitHub repository, read its documentation topics, ask questions about a repo's codebase, architecture, or usage, or explore how an open-source project works.
 allowed-tools:
-  - Bash(uv run --script*mcpcall.py *:*)
+  - Bash(*mcpcall.py*:*)
 ---
 
 # DeepWiki
 
 AI-powered documentation for GitHub repositories. Browse auto-generated docs, explore topic structures, and ask questions about any public repo. Powered by [DeepWiki](https://deepwiki.com) MCP. No API key required.
-
-**Command shorthand** used throughout this doc:
-
-```bash
-MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py"
-```
 
 ## read_wiki_structure
 
@@ -22,8 +16,8 @@ Get a list of documentation topics for a repository. Use this first to discover 
 - `repoName` (required): GitHub repo in `owner/repo` format
 
 ```bash
-$MCPCALL read_wiki_structure repoName:"facebook/react"
-$MCPCALL read_wiki_structure repoName:"anthropics/claude-code"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py read_wiki_structure repoName:"facebook/react"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py read_wiki_structure repoName:"anthropics/claude-code"
 ```
 
 ## read_wiki_contents
@@ -33,8 +27,8 @@ View full documentation about a repository.
 - `repoName` (required): GitHub repo in `owner/repo` format
 
 ```bash
-$MCPCALL read_wiki_contents repoName:"facebook/react"
-$MCPCALL read_wiki_contents repoName:"pallets/flask"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py read_wiki_contents repoName:"facebook/react"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py read_wiki_contents repoName:"pallets/flask"
 ```
 
 ## ask_question
@@ -47,14 +41,14 @@ Ask any question about a repository and get an AI-powered, context-grounded resp
 ### Single repo
 
 ```bash
-$MCPCALL ask_question repoName:"facebook/react" question:"How does the reconciliation algorithm work?"
-$MCPCALL ask_question repoName:"pallets/flask" question:"How are blueprints registered?"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py ask_question repoName:"facebook/react" question:"How does the reconciliation algorithm work?"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py ask_question repoName:"pallets/flask" question:"How are blueprints registered?"
 ```
 
 ### Cross-repo comparison (up to 10 repos)
 
 ```bash
-$MCPCALL ask_question --args '{"repoName": ["pallets/flask", "django/django"], "question": "How do these frameworks handle middleware?"}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py ask_question --args '{"repoName": ["pallets/flask", "django/django"], "question": "How do these frameworks handle middleware?"}'
 ```
 
 ## Tool Selection Guide

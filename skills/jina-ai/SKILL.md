@@ -2,7 +2,7 @@
 name: jina-ai
 description: Web reading, search, academic research, NLP, screenshots, and PDF extraction via Jina AI mcpcall. TRIGGER when need to read a URL, search the web, find academic papers (arXiv/SSRN), classify text, rerank documents, deduplicate content, capture screenshots, or extract PDF figures.
 allowed-tools:
-  - Bash(uv run --script*mcpcall.py *:*)
+  - Bash(*mcpcall.py*:*)
 ---
 
 # Jina AI
@@ -14,13 +14,7 @@ Call Jina MCP tools via `scripts/mcpcall.py` for web content extraction, search,
 If mcpcall reports authentication error, run interactive setup (requires a [Jina API key](https://jina.ai/api-key)):
 
 ```bash
-$MCPCALL --setup
-```
-
-**Command shorthand** used throughout this doc:
-
-```bash
-MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --setup
 ```
 
 ## Web Reading
@@ -32,8 +26,8 @@ Extract web page content as clean markdown. Supports single URL or array of URLs
 - `withAllImages`: extract all images as structured data
 
 ```bash
-$MCPCALL read_url url:"https://example.com"
-$MCPCALL read_url url:"https://example.com" withAllLinks:true
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py read_url url:"https://example.com"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py read_url url:"https://example.com" withAllLinks:true
 ```
 
 ### parallel_read_url
@@ -42,7 +36,7 @@ Read up to 5 URLs in parallel for batch extraction.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-$MCPCALL parallel_read_url --args '{"urls": [{"url": "https://a.com"}, {"url": "https://b.com"}]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py parallel_read_url --args '{"urls": [{"url": "https://a.com"}, {"url": "https://b.com"}]}'
 ```
 
 ## Web Search
@@ -57,9 +51,9 @@ Search the web for current information. Supports single query or array of querie
 - `location`: location string (e.g. `Shanghai`)
 
 ```bash
-$MCPCALL search_web query:"search terms" num:10
-$MCPCALL search_web query:"A股量化" gl:cn hl:zh-cn
-$MCPCALL search_web query:"recent news" tbs:qdr:w
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_web query:"search terms" num:10
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_web query:"A股量化" gl:cn hl:zh-cn
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_web query:"recent news" tbs:qdr:w
 ```
 
 ### parallel_search_web
@@ -68,7 +62,7 @@ Run up to 5 web searches in parallel for broader coverage.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-$MCPCALL parallel_search_web --args '{"searches": [{"query": "topic A"}, {"query": "topic B", "num": 5}]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py parallel_search_web --args '{"searches": [{"query": "topic A"}, {"query": "topic B", "num": 5}]}'
 ```
 
 ### search_images
@@ -78,8 +72,8 @@ Search for images across the web (like Google Images). Returns base64 JPEG by de
 - `tbs`, `gl`, `hl`, `location`: same as `search_web`
 
 ```bash
-$MCPCALL search_images query:"neural network diagram"
-$MCPCALL search_images query:"logo" return_url:true
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_images query:"neural network diagram"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_images query:"logo" return_url:true
 ```
 
 ## Academic Research
@@ -91,8 +85,8 @@ Search arXiv for academic papers in STEM fields.
 - `tbs`: time filter
 
 ```bash
-$MCPCALL search_arxiv query:"transformer attention" num:10
-$MCPCALL search_arxiv query:"reinforcement learning" tbs:qdr:m
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_arxiv query:"transformer attention" num:10
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_arxiv query:"reinforcement learning" tbs:qdr:m
 ```
 
 ### parallel_search_arxiv
@@ -101,7 +95,7 @@ Run up to 5 arXiv searches in parallel for comprehensive coverage.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-$MCPCALL parallel_search_arxiv --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py parallel_search_arxiv --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
 ```
 
 ### search_ssrn
@@ -111,7 +105,7 @@ Search SSRN for social science, economics, law, finance papers.
 - `tbs`: time filter
 
 ```bash
-$MCPCALL search_ssrn query:"market microstructure" num:10
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_ssrn query:"market microstructure" num:10
 ```
 
 ### parallel_search_ssrn
@@ -120,7 +114,7 @@ Run up to 5 SSRN searches in parallel.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-$MCPCALL parallel_search_ssrn --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py parallel_search_ssrn --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
 ```
 
 ### search_bibtex
@@ -131,8 +125,8 @@ Search DBLP + Semantic Scholar, return BibTeX citations.
 - `num`: max results 1-50 (default 10)
 
 ```bash
-$MCPCALL search_bibtex query:"attention is all you need"
-$MCPCALL search_bibtex query:"deep learning" author:Hinton year:2020 num:5
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_bibtex query:"attention is all you need"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_bibtex query:"deep learning" author:Hinton year:2020 num:5
 ```
 
 ## PDF & Screenshots
@@ -145,8 +139,8 @@ Extract figures, tables, and equations from PDFs using layout detection.
 - `max_edge`: max image edge size in px (default 1024)
 
 ```bash
-$MCPCALL extract_pdf id:2301.12345
-$MCPCALL extract_pdf url:"https://example.com/paper.pdf" type:figure
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py extract_pdf id:2301.12345
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py extract_pdf url:"https://example.com/paper.pdf" type:figure
 ```
 
 ### capture_screenshot_url
@@ -156,8 +150,8 @@ Capture web page screenshots as base64 JPEG.
 - `return_url`: `true` to get URL instead of base64
 
 ```bash
-$MCPCALL capture_screenshot_url url:"https://example.com"
-$MCPCALL capture_screenshot_url url:"https://example.com" firstScreenOnly:true
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py capture_screenshot_url url:"https://example.com"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py capture_screenshot_url url:"https://example.com" firstScreenOnly:true
 ```
 
 ## NLP & Embeddings
@@ -169,7 +163,7 @@ Classify texts into user-defined labels using Jina embeddings.
 - `model`: embedding model (default `jina-embeddings-v5-text-small`)
 
 ```bash
-$MCPCALL classify_text --args '{"texts": ["great product", "terrible"], "labels": ["positive", "negative", "neutral"]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py classify_text --args '{"texts": ["great product", "terrible"], "labels": ["positive", "negative", "neutral"]}'
 ```
 
 ### sort_by_relevance
@@ -179,7 +173,7 @@ Rerank documents by relevance to a query using Jina Reranker.
 - `top_n`: max results to return
 
 ```bash
-$MCPCALL sort_by_relevance --args '{"query": "machine learning", "documents": ["doc1 text", "doc2 text"], "top_n": 5}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py sort_by_relevance --args '{"query": "machine learning", "documents": ["doc1 text", "doc2 text"], "top_n": 5}'
 ```
 
 ### deduplicate_strings
@@ -188,7 +182,7 @@ Select top-k semantically unique strings from a list.
 - `k`: number to return (auto-optimized if omitted)
 
 ```bash
-$MCPCALL deduplicate_strings --args '{"strings": ["hello world", "hi world", "goodbye"]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py deduplicate_strings --args '{"strings": ["hello world", "hi world", "goodbye"]}'
 ```
 
 ### deduplicate_images
@@ -197,7 +191,7 @@ Select top-k visually unique images using CLIP v2 embeddings.
 - `k`: number to return (auto-optimized if omitted)
 
 ```bash
-$MCPCALL deduplicate_images --args '{"images": ["https://a.com/1.jpg", "https://a.com/2.jpg"]}'
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py deduplicate_images --args '{"images": ["https://a.com/1.jpg", "https://a.com/2.jpg"]}'
 ```
 
 ### expand_query
@@ -205,7 +199,7 @@ Rewrite a search query into multiple expanded variants for deeper research.
 - `query` (required): the query to expand
 
 ```bash
-$MCPCALL expand_query query:"machine learning optimization"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py expand_query query:"machine learning optimization"
 ```
 
 ## Utility
@@ -214,7 +208,7 @@ $MCPCALL expand_query query:"machine learning optimization"
 Get current session context (time, location, network) for localized responses. No parameters.
 
 ```bash
-$MCPCALL primer
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py primer
 ```
 
 ### guess_datetime_url
@@ -222,7 +216,7 @@ Guess when a web page was last updated/published.
 - `url` (required): page URL
 
 ```bash
-$MCPCALL guess_datetime_url url:"https://example.com/article"
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py guess_datetime_url url:"https://example.com/article"
 ```
 
 ### search_jina_blog
@@ -232,14 +226,14 @@ Search Jina AI's official blog and news.
 - `tbs`: time filter
 
 ```bash
-$MCPCALL search_jina_blog query:"embeddings" num:10
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py search_jina_blog query:"embeddings" num:10
 ```
 
 ### show_api_key
 Show the current Jina API key for this session. No parameters.
 
 ```bash
-$MCPCALL show_api_key
+${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py show_api_key
 ```
 
 ## Tool Selection Guide
@@ -266,4 +260,4 @@ $MCPCALL show_api_key
 - Parallel variants accept up to 5 items — use them for batch work.
 - Set `tbs:qdr:w` to restrict results to the past week for time-sensitive queries.
 - For A-share / Chinese market research, set `gl:cn hl:zh-cn` on search tools.
-- `$MCPCALL --list jina` to see all available tools.
+- `${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --list jina` to see all available tools.
