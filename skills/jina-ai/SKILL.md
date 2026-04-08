@@ -1,21 +1,20 @@
 ---
 name: jina-ai
-description: Web reading, search, academic research, NLP, screenshots, and PDF extraction via Jina AI mcporter calls. TRIGGER when need to read a URL, search the web, find academic papers (arXiv/SSRN), classify text, rerank documents, deduplicate content, capture screenshots, or extract PDF figures.
+description: Web reading, search, academic research, NLP, screenshots, and PDF extraction via Jina AI mcpcall. TRIGGER when need to read a URL, search the web, find academic papers (arXiv/SSRN), classify text, rerank documents, deduplicate content, capture screenshots, or extract PDF figures.
+allowed-tools:
+  - Bash(uv run --script*mcpcall.py jina.*:*)
 ---
 
 # Jina AI
 
-Call Jina MCP tools via `mcporter` (Bash) for web content extraction, search, academic research, embeddings-based NLP, and visual capture.
+Call Jina MCP tools via `mcpcall` (Bash) for web content extraction, search, academic research, embeddings-based NLP, and visual capture.
 
 **MCP Server URL**: `https://mcp.jina.ai/v1`
 
-## Setup
-
-Register jina in mcporter config (one-time, uses `$JINA_API_KEY` from env):
+**Command shorthand** used throughout this doc:
 
 ```bash
-npx -y mcporter config add jina --url https://mcp.jina.ai/v1 \
-  --header "Authorization=Bearer $JINA_API_KEY" --scope home
+MCPCALL="uv run --script ${CLAUDE_PLUGIN_ROOT}/../mcpcall/scripts/mcpcall.py"
 ```
 
 ## Web Reading
@@ -27,8 +26,8 @@ Extract web page content as clean markdown. Supports single URL or array of URLs
 - `withAllImages`: extract all images as structured data
 
 ```bash
-npx -y mcporter call jina.read_url url:"https://example.com"
-npx -y mcporter call jina.read_url url:"https://example.com" withAllLinks:true
+$MCPCALL jina.read_url url:"https://example.com"
+$MCPCALL jina.read_url url:"https://example.com" withAllLinks:true
 ```
 
 ### parallel_read_url
@@ -37,7 +36,7 @@ Read up to 5 URLs in parallel for batch extraction.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-npx -y mcporter call jina.parallel_read_url --args '{"urls": [{"url": "https://a.com"}, {"url": "https://b.com"}]}'
+$MCPCALL jina.parallel_read_url --args '{"urls": [{"url": "https://a.com"}, {"url": "https://b.com"}]}'
 ```
 
 ## Web Search
@@ -52,9 +51,9 @@ Search the web for current information. Supports single query or array of querie
 - `location`: location string (e.g. `Shanghai`)
 
 ```bash
-npx -y mcporter call jina.search_web query:"search terms" num:10
-npx -y mcporter call jina.search_web query:"A股量化" gl:cn hl:zh-cn
-npx -y mcporter call jina.search_web query:"recent news" tbs:qdr:w
+$MCPCALL jina.search_web query:"search terms" num:10
+$MCPCALL jina.search_web query:"A股量化" gl:cn hl:zh-cn
+$MCPCALL jina.search_web query:"recent news" tbs:qdr:w
 ```
 
 ### parallel_search_web
@@ -63,7 +62,7 @@ Run up to 5 web searches in parallel for broader coverage.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-npx -y mcporter call jina.parallel_search_web --args '{"searches": [{"query": "topic A"}, {"query": "topic B", "num": 5}]}'
+$MCPCALL jina.parallel_search_web --args '{"searches": [{"query": "topic A"}, {"query": "topic B", "num": 5}]}'
 ```
 
 ### search_images
@@ -73,8 +72,8 @@ Search for images across the web (like Google Images). Returns base64 JPEG by de
 - `tbs`, `gl`, `hl`, `location`: same as `search_web`
 
 ```bash
-npx -y mcporter call jina.search_images query:"neural network diagram"
-npx -y mcporter call jina.search_images query:"logo" return_url:true
+$MCPCALL jina.search_images query:"neural network diagram"
+$MCPCALL jina.search_images query:"logo" return_url:true
 ```
 
 ## Academic Research
@@ -86,8 +85,8 @@ Search arXiv for academic papers in STEM fields.
 - `tbs`: time filter
 
 ```bash
-npx -y mcporter call jina.search_arxiv query:"transformer attention" num:10
-npx -y mcporter call jina.search_arxiv query:"reinforcement learning" tbs:qdr:m
+$MCPCALL jina.search_arxiv query:"transformer attention" num:10
+$MCPCALL jina.search_arxiv query:"reinforcement learning" tbs:qdr:m
 ```
 
 ### parallel_search_arxiv
@@ -96,7 +95,7 @@ Run up to 5 arXiv searches in parallel for comprehensive coverage.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-npx -y mcporter call jina.parallel_search_arxiv --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
+$MCPCALL jina.parallel_search_arxiv --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
 ```
 
 ### search_ssrn
@@ -106,7 +105,7 @@ Search SSRN for social science, economics, law, finance papers.
 - `tbs`: time filter
 
 ```bash
-npx -y mcporter call jina.search_ssrn query:"market microstructure" num:10
+$MCPCALL jina.search_ssrn query:"market microstructure" num:10
 ```
 
 ### parallel_search_ssrn
@@ -115,7 +114,7 @@ Run up to 5 SSRN searches in parallel.
 - `timeout`: milliseconds (default 30000)
 
 ```bash
-npx -y mcporter call jina.parallel_search_ssrn --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
+$MCPCALL jina.parallel_search_ssrn --args '{"searches": [{"query": "topic A"}, {"query": "topic B"}]}'
 ```
 
 ### search_bibtex
@@ -126,8 +125,8 @@ Search DBLP + Semantic Scholar, return BibTeX citations.
 - `num`: max results 1-50 (default 10)
 
 ```bash
-npx -y mcporter call jina.search_bibtex query:"attention is all you need"
-npx -y mcporter call jina.search_bibtex query:"deep learning" author:Hinton year:2020 num:5
+$MCPCALL jina.search_bibtex query:"attention is all you need"
+$MCPCALL jina.search_bibtex query:"deep learning" author:Hinton year:2020 num:5
 ```
 
 ## PDF & Screenshots
@@ -140,8 +139,8 @@ Extract figures, tables, and equations from PDFs using layout detection.
 - `max_edge`: max image edge size in px (default 1024)
 
 ```bash
-npx -y mcporter call jina.extract_pdf id:2301.12345
-npx -y mcporter call jina.extract_pdf url:"https://example.com/paper.pdf" type:figure
+$MCPCALL jina.extract_pdf id:2301.12345
+$MCPCALL jina.extract_pdf url:"https://example.com/paper.pdf" type:figure
 ```
 
 ### capture_screenshot_url
@@ -151,8 +150,8 @@ Capture web page screenshots as base64 JPEG.
 - `return_url`: `true` to get URL instead of base64
 
 ```bash
-npx -y mcporter call jina.capture_screenshot_url url:"https://example.com"
-npx -y mcporter call jina.capture_screenshot_url url:"https://example.com" firstScreenOnly:true
+$MCPCALL jina.capture_screenshot_url url:"https://example.com"
+$MCPCALL jina.capture_screenshot_url url:"https://example.com" firstScreenOnly:true
 ```
 
 ## NLP & Embeddings
@@ -164,7 +163,7 @@ Classify texts into user-defined labels using Jina embeddings.
 - `model`: embedding model (default `jina-embeddings-v5-text-small`)
 
 ```bash
-npx -y mcporter call jina.classify_text --args '{"texts": ["great product", "terrible"], "labels": ["positive", "negative", "neutral"]}'
+$MCPCALL jina.classify_text --args '{"texts": ["great product", "terrible"], "labels": ["positive", "negative", "neutral"]}'
 ```
 
 ### sort_by_relevance
@@ -174,7 +173,7 @@ Rerank documents by relevance to a query using Jina Reranker.
 - `top_n`: max results to return
 
 ```bash
-npx -y mcporter call jina.sort_by_relevance --args '{"query": "machine learning", "documents": ["doc1 text", "doc2 text"], "top_n": 5}'
+$MCPCALL jina.sort_by_relevance --args '{"query": "machine learning", "documents": ["doc1 text", "doc2 text"], "top_n": 5}'
 ```
 
 ### deduplicate_strings
@@ -183,7 +182,7 @@ Select top-k semantically unique strings from a list.
 - `k`: number to return (auto-optimized if omitted)
 
 ```bash
-npx -y mcporter call jina.deduplicate_strings --args '{"strings": ["hello world", "hi world", "goodbye"]}'
+$MCPCALL jina.deduplicate_strings --args '{"strings": ["hello world", "hi world", "goodbye"]}'
 ```
 
 ### deduplicate_images
@@ -192,7 +191,7 @@ Select top-k visually unique images using CLIP v2 embeddings.
 - `k`: number to return (auto-optimized if omitted)
 
 ```bash
-npx -y mcporter call jina.deduplicate_images --args '{"images": ["https://a.com/1.jpg", "https://a.com/2.jpg"]}'
+$MCPCALL jina.deduplicate_images --args '{"images": ["https://a.com/1.jpg", "https://a.com/2.jpg"]}'
 ```
 
 ### expand_query
@@ -200,7 +199,7 @@ Rewrite a search query into multiple expanded variants for deeper research.
 - `query` (required): the query to expand
 
 ```bash
-npx -y mcporter call jina.expand_query query:"machine learning optimization"
+$MCPCALL jina.expand_query query:"machine learning optimization"
 ```
 
 ## Utility
@@ -209,7 +208,7 @@ npx -y mcporter call jina.expand_query query:"machine learning optimization"
 Get current session context (time, location, network) for localized responses. No parameters.
 
 ```bash
-npx -y mcporter call jina.primer
+$MCPCALL jina.primer
 ```
 
 ### guess_datetime_url
@@ -217,7 +216,7 @@ Guess when a web page was last updated/published.
 - `url` (required): page URL
 
 ```bash
-npx -y mcporter call jina.guess_datetime_url url:"https://example.com/article"
+$MCPCALL jina.guess_datetime_url url:"https://example.com/article"
 ```
 
 ### search_jina_blog
@@ -227,14 +226,14 @@ Search Jina AI's official blog and news.
 - `tbs`: time filter
 
 ```bash
-npx -y mcporter call jina.search_jina_blog query:"embeddings" num:10
+$MCPCALL jina.search_jina_blog query:"embeddings" num:10
 ```
 
 ### show_api_key
 Show the current Jina API key for this session. No parameters.
 
 ```bash
-npx -y mcporter call jina.show_api_key
+$MCPCALL jina.show_api_key
 ```
 
 ## Tool Selection Guide
@@ -261,5 +260,4 @@ npx -y mcporter call jina.show_api_key
 - Parallel variants accept up to 5 items — use them for batch work.
 - Set `tbs:qdr:w` to restrict results to the past week for time-sensitive queries.
 - For A-share / Chinese market research, set `gl:cn hl:zh-cn` on search tools.
-- Use `--output json` on any call to get raw JSON for programmatic processing.
-- Use `--output markdown` for human-readable output.
+- `$MCPCALL --list jina` to see all available tools.
