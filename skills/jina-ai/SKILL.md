@@ -11,10 +11,10 @@ Call Jina MCP tools via `scripts/mcpcall.py` for web content extraction, search,
 
 ## Setup
 
-If mcpcall reports authentication error, run interactive setup (requires a [Jina API key](https://jina.ai/api-key)):
+Requires `JINA_API_KEY` environment variable (get one at [jina.ai/api-key](https://jina.ai/api-key)):
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --setup
+export JINA_API_KEY=<key>
 ```
 
 ## Web Reading

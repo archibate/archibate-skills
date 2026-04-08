@@ -6,16 +6,17 @@
 """<SERVER_NAME> MCP tool caller.
 
 Usage:
-    <cmd> <tool_name> key:"value" key2:10
-    <cmd> <tool_name> --args '{"key": ["array"]}'
-    <cmd> --list
-    <cmd> --setup              # first-time auth setup
+    mcpcall.py <tool_name> key:"value" key2:10
+    mcpcall.py <tool_name> --args '{"key": ["array"]}'
+    mcpcall.py --list
+
+Requires <ENV_VAR> environment variable.
 """
 import argparse
 import json
+import os
 import sys
 from functools import partial
-from pathlib import Path
 
 import anyio
 
@@ -23,44 +24,18 @@ from mcp.client.session import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
 
 # === EDIT THESE ===
-SERVER_NAME = "myserver"
 SERVER_URL = "https://mcp.example.com/v1"
-SETUP_PROMPT = "Enter API key"
-SETUP_URL = "https://example.com/api-keys"
+ENV_VAR = "MY_API_KEY"
 # ==================
 
-CFG_PATH = Path.home() / ".config" / "mcpcall" / "servers.json"
 
-
-def load_headers() -> dict[str, str]:
-    if CFG_PATH.exists():
-        servers = json.loads(CFG_PATH.read_text())
-        if SERVER_NAME in servers:
-            return servers[SERVER_NAME].get("headers", {})
-    claude_json = Path.home() / ".claude.json"
-    if claude_json.exists():
-        cfg = json.loads(claude_json.read_text())
-        entry = cfg.get("mcpServers", {}).get(SERVER_NAME, {})
-        return entry.get("headers", {})
-    return {}
-
-
-def setup():
-    print(f"Setup: {SERVER_NAME} MCP server")
-    key = input(f"{SETUP_PROMPT} (from {SETUP_URL}): ").strip()
+def get_headers() -> dict[str, str]:
+    key = os.environ.get(ENV_VAR)
     if not key:
-        print("error: empty key", file=sys.stderr)
+        print(f"error: ${ENV_VAR} not set", file=sys.stderr)
+        print(f"  export {ENV_VAR}=<key>", file=sys.stderr)
         sys.exit(1)
-    CFG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    servers: dict = {}
-    if CFG_PATH.exists():
-        servers = json.loads(CFG_PATH.read_text())
-    servers[SERVER_NAME] = {
-        "url": SERVER_URL,
-        "headers": {"Authorization": f"Bearer {key}"},
-    }
-    CFG_PATH.write_text(json.dumps(servers, indent=2) + "\n")
-    print(f"saved to {CFG_PATH}")
+    return {"Authorization": f"Bearer {key}"}
 
 
 def parse_kv_args(args: list[str]) -> dict:
@@ -111,23 +86,14 @@ async def list_tools(headers: dict):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=f"Call {SERVER_NAME} MCP tools")
+    parser = argparse.ArgumentParser(description="Call MCP tools")
     parser.add_argument("tool", nargs="?", help="Tool name")
     parser.add_argument("kv_args", nargs="*", help="key:value arguments")
     parser.add_argument("--args", dest="json_args", help="JSON arguments string")
     parser.add_argument("--list", action="store_true", help="List available tools")
-    parser.add_argument("--setup", action="store_true", help="Configure API key")
     args = parser.parse_args()
 
-    if args.setup:
-        setup()
-        return
-
-    headers = load_headers()
-    if not headers:
-        print(f"error: {SERVER_NAME} requires authentication.", file=sys.stderr)
-        print(f"Run with --setup to configure, or add to {CFG_PATH}", file=sys.stderr)
-        sys.exit(1)
+    headers = get_headers()
 
     if args.list:
         anyio.run(partial(list_tools, headers), backend="asyncio")

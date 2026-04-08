@@ -6,58 +6,35 @@
 """Jina AI MCP tool caller.
 
 Usage:
-    jina search_web query:"search terms" num:10
-    jina read_url url:"https://example.com"
-    jina classify_text --args '{"texts":["a","b"],"labels":["x","y"]}'
-    jina --list
-    jina --setup              # first-time auth setup
+    mcpcall.py search_web query:"search terms" num:10
+    mcpcall.py read_url url:"https://example.com"
+    mcpcall.py classify_text --args '{"texts":["a","b"],"labels":["x","y"]}'
+    mcpcall.py --list
+
+Requires JINA_API_KEY environment variable.
 """
 import argparse
 import json
+import os
 import sys
 from functools import partial
-from pathlib import Path
 
 import anyio
 
 from mcp.client.session import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
 
-SERVER_NAME = "jina"
 SERVER_URL = "https://mcp.jina.ai/v1"
-NEEDS_AUTH = True
-CFG_PATH = Path.home() / ".config" / "mcpcall" / "servers.json"
+ENV_VAR = "JINA_API_KEY"
 
 
-def load_headers() -> dict[str, str]:
-    if CFG_PATH.exists():
-        servers = json.loads(CFG_PATH.read_text())
-        if SERVER_NAME in servers:
-            return servers[SERVER_NAME].get("headers", {})
-    claude_json = Path.home() / ".claude.json"
-    if claude_json.exists():
-        cfg = json.loads(claude_json.read_text())
-        entry = cfg.get("mcpServers", {}).get(SERVER_NAME, {})
-        return entry.get("headers", {})
-    return {}
-
-
-def setup():
-    print(f"Setup: {SERVER_NAME} MCP server")
-    key = input("Enter Jina API key (from https://jina.ai/api-key): ").strip()
+def get_headers() -> dict[str, str]:
+    key = os.environ.get(ENV_VAR)
     if not key:
-        print("error: empty key", file=sys.stderr)
+        print(f"error: ${ENV_VAR} not set", file=sys.stderr)
+        print(f"  export {ENV_VAR}=<key>  # get one at https://jina.ai/api-key", file=sys.stderr)
         sys.exit(1)
-    CFG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    servers: dict = {}
-    if CFG_PATH.exists():
-        servers = json.loads(CFG_PATH.read_text())
-    servers[SERVER_NAME] = {
-        "url": SERVER_URL,
-        "headers": {"Authorization": f"Bearer {key}"},
-    }
-    CFG_PATH.write_text(json.dumps(servers, indent=2) + "\n")
-    print(f"saved to {CFG_PATH}")
+    return {"Authorization": f"Bearer {key}"}
 
 
 def parse_kv_args(args: list[str]) -> dict:
@@ -108,23 +85,14 @@ async def list_tools(headers: dict):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=f"Call {SERVER_NAME} MCP tools")
+    parser = argparse.ArgumentParser(description="Call Jina AI MCP tools")
     parser.add_argument("tool", nargs="?", help="Tool name (e.g. search_web)")
     parser.add_argument("kv_args", nargs="*", help="key:value arguments")
     parser.add_argument("--args", dest="json_args", help="JSON arguments string")
     parser.add_argument("--list", action="store_true", help="List available tools")
-    parser.add_argument("--setup", action="store_true", help="Configure API key")
     args = parser.parse_args()
 
-    if args.setup:
-        setup()
-        return
-
-    headers = load_headers()
-    if NEEDS_AUTH and not headers:
-        print(f"error: {SERVER_NAME} requires authentication.", file=sys.stderr)
-        print(f"Run with --setup to configure, or add to {CFG_PATH}", file=sys.stderr)
-        sys.exit(1)
+    headers = get_headers()
 
     if args.list:
         anyio.run(partial(list_tools, headers), backend="asyncio")

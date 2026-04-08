@@ -34,14 +34,14 @@ SERVER_URL = "https://mcp.example.com/v1"
 
 ### Auth variant
 
-Edit all four constants:
+Edit both constants:
 
 ```python
-SERVER_NAME = "myserver"
 SERVER_URL = "https://mcp.example.com/v1"
-SETUP_PROMPT = "Enter API key"
-SETUP_URL = "https://example.com/api-keys"
+ENV_VAR = "MY_API_KEY"
 ```
+
+The script reads the API key from the environment variable at runtime — fully stateless.
 
 ## Step 2: Write SKILL.md
 
@@ -69,10 +69,10 @@ allowed-tools:
 
 ## Setup (auth variant only)
 
-If mcpcall reports authentication error, run:
+Requires `MY_API_KEY` environment variable:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/mcpcall.py --setup
+export MY_API_KEY=<key>
 ```
 
 ## tool_name
